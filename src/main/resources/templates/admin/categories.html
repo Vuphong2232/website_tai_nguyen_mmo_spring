@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4">
+        </div>
+    </div>
+</div>
+<div class="tap-top">
+    <i data-feather="chevrons-up">
+    </i>
+</div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}">
+        </div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{admin/app/leftsider :: sider}">
+        </div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>
+                                Trang Chủ
+                            </h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">
+                                    Số Dư
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="list-product-header">
+                                    <form class="d-flex align-items-end flex-wrap gap-3">
+                                        <!-- 🔍 Input tìm kiếm -->
+                                        <div>
+                                            <label for="search" class="form-label mb-1">Tìm kiếm</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="search"
+                                                   name="search"
+                                                   placeholder="Nhập từ khóa..." />
+                                        </div>
+                                        <!-- 🔽 Select danh mục -->
+                                        <div>
+                                            <label for="title-filter" class="form-label mb-1">Chọn danh mục</label>
+                                            <select class="form-select" id="title-filter" aria-label="Chọn danh mục">
+                                                <option value="">Tất cả danh mục</option>
+                                                <option th:each="item : ${danhmucspList}"
+                                                        th:value="${item.title}"
+                                                        th:text="${item.title}">
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <!-- 🔽 Select trạng thái -->
+                                        <div>
+                                            <label for="status-filter" class="form-label">Lọc theo trạng thái:</label>
+                                            <select class="form-select" id="status-filter">
+                                                <option value="">Tất cả</option>
+                                                <option value="hoatdong">Hoạt động</option>
+                                                <option value="dunghoatdong">Dừng hoạt động</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button type="button"
+                                                    class="btn btn-secondary"
+                                                    id="btnReloadCategory">
+                                                <i class="fa fa-rotate-right"></i> Reload
+                                            </button>
+                                        </div>
+
+                                        <!-- ➕ Nút Add Category -->
+                                        <div class="ms-auto">
+                                            <label class="form-label mb-1 d-block invisible">Thêm</label>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAddCategory">
+                                                <i class="fa fa-plus"></i> Thêm danh mục
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+
+
+
+                                <div class="list-product list-category">
+                                    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                                        <div class="datatable-container">
+                                            <table class="table datatable-table" id="category-table">
+                                                <thead>
+                                                <tr>
+                                                    <th style="width: 4%; text-align: center;">
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-primary" type="checkbox">
+                                                        </div>
+                                                    </th>
+                                                    <th style="width: 20%; text-align: center;"> <span class="f-light f-w-600">Title</span> </th>
+                                                    <th style="width: 20%; text-align: center;"> <span class="f-light f-w-600">TOSLU</span> </th>
+                                                    <th style="width: 20%; text-align: center;"> <span class="f-light f-w-600">Image</span> </th>
+                                                    <th style="width: 16%; text-align: center;"> <span class="f-light f-w-600">Status</span> </th>
+                                                    <th style="width: 20%; text-align: center;"> <span class="f-light f-w-600">Action</span> </th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr th:each="danhmucsp : ${danhmucspList}"
+                                                    th:attr="data-status=${danhmucsp.status}, data-title=${danhmucsp.title}">
+                                                    <!-- Checkbox -->
+                                                    <td>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input checkbox-primary" type="checkbox">
+                                                        </div>
+                                                    </td>
+                                                    <!-- Title -->
+                                                    <td style="text-align: center;">
+                                                        <span th:text="${danhmucsp.title}">Tên danh mục</span>
+                                                    </td>
+                                                    <!-- TOSLU -->
+                                                    <td style="text-align: center;">
+                                                        <span th:text="${danhmucsp.toslu}">0</span>
+                                                    </td>
+                                                    <!-- Image -->
+                                                    <td style="text-align: center;">
+                                                        <img class="img-fluid rounded" th:src="@{${danhmucsp.img}}" alt="category image"  style="height: 75px;width: 75px;" />
+                                                    </td>
+                                                    <!-- Status -->
+                                                    <td style="text-align: center;">
+                                                   <span  th:classappend="${danhmucsp.status == 'hoatdong'} ?
+                                                      'badge badge-light-success' : 'badge badge-light-danger'"
+                                                          th:text="${danhmucsp.status == 'hoatdong'} ?
+                                                      'Hoạt động' : 'Dừng hoạt động'">
+                                                   Trạng thái
+                                                   </span>
+                                                    </td>
+                                                    <!-- Actions -->
+                                                    <td>
+                                                        <div class="product-action d-flex gap-2 justify-content-center">
+                                                            <!-- Nút Sửa -->
+                                                            <button type="button"
+                                                                    th:attr="data-id=${danhmucsp.id}"
+                                                                    class="btn btn-sm btn-outline-primary edit-category"
+                                                                    title="Sửa danh mục">
+                                                                <i class="fa-solid fa-pen"></i>
+                                                                <span style="margin-left: 5px">
+                                                      Edit
+                                                      </span>
+                                                            </button>
+                                                            <!-- Nút Xóa -->
+                                                            <button type="button"
+                                                                    th:attr="data-id=${danhmucsp.id}"
+                                                                    class="btn btn-sm btn-outline-danger delete-category"
+                                                                    title="Xóa danh mục">
+                                                                <i class="fa-solid fa-trash"></i>
+                                                                <span style="margin-left: 5px">
+                                                      DELETE
+                                                      </span>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal thêm danh mục -->
+            <div class="modal fade" id="modalAddCategory" tabindex="-1" aria-labelledby="modalAddCategoryLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <form id="formAddCategoryAjax">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAddCategoryLabel">Thêm danh mục</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Title -->
+                                <div class="mb-3">
+                                    <label for="input-title-modal" class="form-label">Tên danh mục</label>
+                                    <input type="text" class="form-control" name="title" id="input-title-modal" required>
+                                </div>
+                                <!-- TOSLU -->
+                                <div class="mb-3">
+                                    <label for="input-toslu-modal" class="form-label">TOSLU</label>
+                                    <input type="text" class="form-control" name="toslu" id="input-toslu-modal" required>
+                                </div>
+                                <!-- Ảnh upload + link -->
+                                <div class="mb-3">
+                                    <label for="img-upload" class="form-label">Chọn ảnh</label>
+                                    <input type="file" class="form-control" id="img-upload" accept="image/*" />
+                                    <input type="hidden" name="img" id="img-path" />
+                                    <img id="preview-img" src="#" class="mt-2 d-none" height="40" />
+                                </div>
+                                <!-- Trạng thái -->
+                                <div class="mb-3">
+                                    <label for="select-status-modal" class="form-label">Trạng thái</label>
+                                    <select class="form-select" name="status" id="select-status-modal" required>
+                                        <option disabled selected>Chọn trạng thái</option>
+                                        <option value="hoatdong">Hoạt động</option>
+                                        <option value="dunghoatdong">Dừng hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="btnAddCategory">Thêm</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal sửa danh mục -->
+            <div class="modal fade" id="modalEditCategory" tabindex="-1" aria-labelledby="modalEditCategoryLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <form id="formEditCategoryAjax">
+                            <input type="hidden" id="edit-id" />
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditCategoryLabel">Sửa danh mục</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="edit-title" class="form-label">Tên danh mục</label>
+                                    <input type="text" class="form-control" id="edit-title" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-toslu" class="form-label">TOSLU</label>
+                                    <input type="text" class="form-control" id="edit-toslu" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-img-upload" class="form-label">Chọn ảnh mới (nếu có)</label>
+                                    <input type="file" class="form-control" id="edit-img-upload" accept="image/*" />
+                                    <input type="hidden" id="edit-img-path" />
+                                    <img id="edit-preview-img" src="#" class="mt-2 d-none" height="40" />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-status" class="form-label">Trạng thái</label>
+                                    <select class="form-select" id="edit-status" required>
+                                        <option value="hoatdong">Hoạt động</option>
+                                        <option value="dunghoatdong">Dừng hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="btnUpdateCategory">Cập nhật</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- Thông báo (sẽ dùng alert JS nên phần này không cần) -->
+            <!-- jQuery + SweetAlert2 -->
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                $("#btnReloadCategory").on("click", function () {
+                    // Reset dropdown lọc
+                    $("#status-filter").val('');
+                    $("#title-filter").val('');
+
+                    // Reset ô tìm kiếm
+                    $("#search").val('');
+
+                    // Hiện lại tất cả các dòng
+                    $("#category-table tbody tr").each(function () {
+                        $(this).show();
+                    });
+
+                    // Nếu có dùng DataTables → reset search
+                    if ($.fn.DataTable && $.fn.dataTable.isDataTable('#category-table')) {
+                        $('#category-table').DataTable().search('').draw();
+                    }
+                });
+
+                $("#btnAddCategory").on("click", function (event) {
+                    event.preventDefault();
+                    $('#btnAddCategory').html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
+
+                    const title = $("#input-title-modal").val().trim();
+                    const toslu = $("#input-toslu-modal").val().trim();
+                    const img = $("#img-path").val().trim();
+                    const status = $("#select-status-modal").val();
+
+                    if (!title || !toslu || !img || !status) {
+                        Swal.fire({
+                            title: "Thiếu thông tin",
+                            icon: "warning",
+                            text: "Vui lòng nhập đầy đủ và upload ảnh!",
+                            customClass: {
+                                confirmButton: "btn btn-warning"
+                            }
+                        });
+                        $('#btnAddCategory').html('Thêm').prop('disabled', false);
+                        return;
+                    }
+
+                    const formData = {
+                        title: title,
+                        toslu: toslu,
+                        img: img,
+                        status: status
+                    };
+
+                    $.post("/admin/add", formData, function (data) {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: "Thành công",
+                                icon: "success",
+                                text: data.msg,
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                            setTimeout(function () {
+                                window.location.reload(); // Hoặc gọi loadDanhMuc()
+                            }, 1500);
+                        } else {
+                            Swal.fire({
+                                title: "Lỗi",
+                                icon: "error",
+                                text: data.msg,
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                        }
+                        $('#btnAddCategory').html('Thêm').prop('disabled', false);
+                    }, "json")
+                        .fail(function () {
+                            Swal.fire({
+                                title: "Lỗi server",
+                                icon: "error",
+                                text: "Không thể gửi yêu cầu đến máy chủ.",
+                                customClass: {
+                                    confirmButton: "btn btn-danger"
+                                }
+                            });
+                            $('#btnAddCategory').html('Thêm').prop('disabled', false);
+                        });
+                });
+
+                // Upload ảnh
+                $("#img-upload").on("change", function () {
+                    const file = this.files[0];
+                    if (!file) return;
+
+                    const formData = new FormData();
+                    formData.append("file", file);
+
+                    fetch("/admin/category/upload-img", {
+                        method: "POST",
+                        body: formData
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (data.status === "success") {
+                                $("#img-path").val(data.link);
+                                $("#preview-img").attr("src", data.link).removeClass("d-none");
+                            } else {
+                                Swal.fire("Upload thất bại", data.msg, "error");
+                            }
+                        })
+                        .catch((err) => {
+                            console.error("Lỗi upload ảnh:", err);
+                            Swal.fire("Lỗi", "Không thể upload ảnh", "error");
+                        });
+                });
+
+                document.getElementById('status-filter').addEventListener('change', function () {
+                    const selectedStatus = this.value;
+                    const rows = document.querySelectorAll('#category-table tbody tr');
+
+                    rows.forEach(row => {
+                        const rowStatus = row.getAttribute('data-status');
+                        if (!selectedStatus || rowStatus === selectedStatus) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+
+                document.getElementById('title-filter').addEventListener('change', function () {
+                    const selectedTitle = this.value.trim().toLowerCase();
+                    const rows = document.querySelectorAll('#category-table tbody tr');
+
+                    rows.forEach(row => {
+                        const rowTitle = row.getAttribute('data-title')?.toLowerCase();
+                        if (!selectedTitle || rowTitle === selectedTitle) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+                document.getElementById('search').addEventListener('input', function () {
+                    const keyword = this.value.trim().toLowerCase();
+                    const rows = document.querySelectorAll('#category-table tbody tr');
+
+                    rows.forEach(row => {
+                        const title = row.getAttribute('data-title')?.toLowerCase();
+                        if (!keyword || title.includes(keyword)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    });
+                });
+
+                $(document).on("click", ".delete-category", function () {
+                    const id = $(this).data("id");
+
+                    Swal.fire({
+                        title: "Bạn có chắc muốn xoá danh mục này?",
+                        text: "Thao tác này không thể hoàn tác!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Xoá",
+                        cancelButtonText: "Hủy",
+                        customClass: {
+                            confirmButton: "btn btn-danger",
+                            cancelButton: "btn btn-secondary"
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "/admin/delete/" + id,
+                                type: "DELETE",
+                                success: function (data) {
+                                    if (data.status === "success") {
+                                        Swal.fire("Đã xoá!", data.msg, "success");
+                                        setTimeout(() => location.reload(), 1500);
+                                    } else {
+                                        Swal.fire("Thất bại", data.msg, "error");
+                                    }
+                                },
+                                error: function () {
+                                    Swal.fire("Lỗi", "Không thể kết nối với máy chủ", "error");
+                                }
+                            });
+                        }
+                    });
+                });
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    const editButtons = document.querySelectorAll('.edit-category');
+
+                    editButtons.forEach(function (btn) {
+                        btn.addEventListener('click', function () {
+                            const row = btn.closest('tr');
+
+                            // Lấy dữ liệu từ hàng tương ứng
+                            const id = btn.getAttribute('data-id');
+                            const title = row.querySelector('td:nth-child(2) span').innerText.trim();
+                            const toslu = row.querySelector('td:nth-child(3) span').innerText.trim();
+                            const imgSrc = row.querySelector('td:nth-child(4) img')?.getAttribute('src');
+                            const statusText = row.querySelector('td:nth-child(5) span').innerText.trim().toLowerCase();
+
+                            // Gán vào form sửa
+                            document.getElementById('edit-id').value = id;
+                            document.getElementById('edit-title').value = title;
+                            document.getElementById('edit-toslu').value = toslu;
+                            document.getElementById('edit-preview-img').src = imgSrc;
+                            document.getElementById('edit-status').value = (statusText === 'hoạt động') ? 'hoatdong' : 'dunghoatdong';
+
+                            // Hiện modal
+                            new bootstrap.Modal(document.getElementById('modalEditCategory')).show();
+                        });
+                    });
+                });
+
+                // Click "Cập nhật"
+                $("#btnUpdateCategory").on("click", function (event) {
+                    event.preventDefault();
+                    $('#btnUpdateCategory').html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
+
+                    const id = $("#edit-id").val();
+                    const title = $("#edit-title").val().trim();
+                    const toslu = $("#edit-toslu").val().trim();
+                    const img = $("#edit-img-path").val().trim();
+                    const status = $("#edit-status").val();
+
+                    if (!title || !toslu || !status) {
+                        Swal.fire("Thiếu dữ liệu", "Vui lòng điền đầy đủ thông tin!", "warning");
+                        $('#btnUpdateCategory').html('Cập nhật').prop('disabled', false);
+                        return;
+                    }
+
+                    const formData = {
+                        title: title,
+                        toslu: toslu,
+                        img: img,
+                        status: status
+                    };
+
+                    $.post("/admin/update/" + id, formData, function (data) {
+                        if (data.status === 'success') {
+                            Swal.fire("Cập nhật thành công", data.msg, "success");
+                            setTimeout(() => location.reload(), 1500);
+                        } else {
+                            Swal.fire("Thất bại", data.msg, "error");
+                        }
+                        $('#btnUpdateCategory').html('Cập nhật').prop('disabled', false);
+                    }, "json").fail(() => {
+                        Swal.fire("Lỗi server", "Không thể cập nhật", "error");
+                        $('#btnUpdateCategory').html('Cập nhật').prop('disabled', false);
+                    });
+                });
+
+                // Upload ảnh khi sửa
+                $("#edit-img-upload").on("change", function () {
+                    const file = this.files[0];
+                    if (!file) return;
+
+                    const formData = new FormData();
+                    formData.append("file", file);
+
+                    fetch("/admin/category/upload-img", {
+                        method: "POST",
+                        body: formData
+                    })
+                        .then((res) => res.json())
+                        .then((data) => {
+                            if (data.status === "success") {
+                                $("#edit-img-path").val(data.link);
+                                $("#edit-preview-img").attr("src", data.link).removeClass("d-none");
+                            } else {
+                                Swal.fire("Upload thất bại", data.msg, "error");
+                            }
+                        })
+                        .catch((err) => {
+                            console.error("Lỗi upload ảnh:", err);
+                            Swal.fire("Lỗi", "Không thể upload ảnh", "error");
+                        });
+                });
+
+                // Hàm mở modal và gán dữ liệu
+                function openEditModal(danhmuc) {
+                    $("#edit-id").val(danhmuc.id);
+                    $("#edit-title").val(danhmuc.title);
+                    $("#edit-toslu").val(danhmuc.toslu);
+                    $("#edit-img-path").val(danhmuc.img);
+                    $("#edit-preview-img").attr("src", danhmuc.img).removeClass("d-none");
+                    $("#edit-status").val(danhmuc.status);
+                    $("#modalEditCategory").modal("show");
+                }
+            </script>
+        </div>
+        <div th:replace="~{app/footer :: footer}">
+        </div>
+    </div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>

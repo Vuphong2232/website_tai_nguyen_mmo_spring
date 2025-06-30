@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4"></div>
+    </div>
+</div>
+<div class="tap-top"><i data-feather="chevrons-up"></i></div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}"></div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{admin/app/leftsider :: sider}"></div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Trang Chủ</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">Số Dư</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="list-product-header">
+                                    <form class="d-flex align-items-end flex-wrap gap-3">
+                                        <!-- 🔍 Input tìm kiếm -->
+                                        <div>
+                                            <label for="search" class="form-label mb-1">Tìm kiếm</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="search"
+                                                   name="search"
+                                                   placeholder="Nhập từ khóa..." />
+                                        </div>
+
+                                        <div>
+                                            <label for="price-filter" class="form-label mb-1">Chọn giá bán</label>
+                                            <select class="form-select" id="price-filter" aria-label="Chọn danh mục">
+                                                <option value="">Lựa chọn giá</option>
+                                                <option value="asc">Từ thấp đến cao</option>
+                                                <option value="desc">Từ cao đến thấp</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button type="button"
+                                                    class="btn btn-secondary"
+                                                    id="btnReloadCategory">
+                                                <i class="fa fa-rotate-right"></i> Reload
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                                <div class="list-product list-category">
+                                    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                                        <div class="datatable-container">
+                                            <table class="table datatable-table" id="category-table">
+                                                <thead>
+                                                <tr>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">ID</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">MÃ GIAO DỊCH</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">PHƯƠNG THỨC NẠP</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">SỐ TIỀN</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">THỜI GIAN</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">TRẠNG THÁI</span></th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody id="napListBody">
+                                                <!-- JS sẽ render vào đây -->
+                                                </tbody>
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <script>
+            let originalData = []; // Lưu dữ liệu ban đầu
+
+            // Gọi API khi load trang
+            function loadNapBankList() {
+                fetch('/admin/purchase_history/list')
+                    .then(res => res.json())
+                    .then(data => {
+                        originalData = data; // Lưu lại để dùng cho tìm kiếm
+                        renderTable(data);   // In bảng lần đầu
+                    })
+                    .catch(err => console.error('Lỗi khi load dữ liệu:', err));
+            }
+
+            // Hàm render dữ liệu ra bảng
+            function renderTable(data) {
+                const tbody = document.getElementById('napListBody');
+                tbody.innerHTML = '';
+                data.forEach(item => {
+                    const row = `
+            <tr>
+                <td style="text-align: center;">${item.id}</td>
+                <td style="text-align: center;">${item.nganHangNap}</td>
+                <td style="text-align: center;">${item.maGd}</td>
+                <td style="text-align: center;">${formatAmount(item.amount)}đ</td>
+                <td style="text-align: center;">${item.status}</td>
+                <td style="text-align: center;">${item.time}</td>
+            </tr>
+        `;
+                    tbody.insertAdjacentHTML('beforeend', row);
+                });
+            }
+
+            // Lọc và sắp xếp
+            function applyFilterAndRender() {
+                const keyword = document.getElementById('search').value.toLowerCase();
+                const sortValue = document.getElementById('price-filter').value;
+
+                // Lọc theo từ khóa
+                let filtered = originalData.filter(item =>
+                    item.id.toString().includes(keyword) ||
+                    item.maGd.toLowerCase().includes(keyword) ||
+                    item.nganHangNap.toLowerCase().includes(keyword) ||
+                    item.status.toLowerCase().includes(keyword) ||
+                    item.time.toLowerCase().includes(keyword)
+                );
+
+                // Sắp xếp theo giá
+                if (sortValue === 'asc') {
+                    filtered.sort((a, b) => a.amount - b.amount);
+                } else if (sortValue === 'desc') {
+                    filtered.sort((a, b) => b.amount - a.amount);
+                }
+
+                renderTable(filtered);
+            }
+
+            // Gắn sự kiện tìm kiếm & chọn lọc giá
+            document.getElementById('search').addEventListener('input', applyFilterAndRender);
+            document.getElementById('price-filter').addEventListener('change', applyFilterAndRender);
+
+            // Load khi trang khởi động
+            window.addEventListener('load', loadNapBankList);
+
+            // Format tiền
+            function formatAmount(amount) {
+                return amount.toLocaleString('vi-VN');
+            }
+            document.getElementById('btnReloadCategory').addEventListener('click', function () {
+                // Xoá các input/filter
+                document.getElementById('search').value = '';
+                document.getElementById('price-filter').value = '';
+
+                // Gọi lại API và render từ đầu
+                loadNapBankList();
+            });
+
+        </script>
+
+
+
+        <div th:replace="~{app/footer :: footer}"></div>
+    </div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>

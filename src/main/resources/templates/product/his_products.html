@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4"></div>
+    </div>
+</div>
+<div class="tap-top"><i data-feather="chevrons-up"></i></div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}"></div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{app/sider :: sider}"></div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Trang Chủ</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">Số Dư</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Container-fluid starts-->
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card role-management">
+                            <div class="card-body">
+                                <div class="blog-card">
+                                    <div class="blog-card-content">
+                                        <div class="role-details">
+                                            <div class="role-profile">
+                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwLeIGjrPAK2i_tTs9x9TqL9LrUXSi9zmS3g&s" alt="Ticket-star">
+                                            </div>
+                                            <div class="role-profile-details">
+                                                <h3>Chào bạn đến với quản lý đơn hàng!</h3>
+                                            </div>
+                                        </div>
+                                        <div class="blog-tags">
+                                            <div class="tags-icon bg-primary">
+                                                <i class="fa-solid fa-inbox"></i>
+                                            </div>
+                                            <div class="tag-details">
+                                                <h2 class="total-num counter" th:text="${soLuongDon}"></h2>
+                                                <p>Đơn hàng đã mua</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="blog-card-image">
+                                        <img src="https://larathemes.pixelstrap.com/riho/assets/images/user-management.png" alt="">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" bis_skin_checked="1">
+                        <div class="card" bis_skin_checked="1">
+                            <div class="card-body border-b-primary border-2" bis_skin_checked="1">
+                                <div class="upcoming-box" bis_skin_checked="1">
+                                    <div class="upcoming-icon bg-primary" bis_skin_checked="1">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                    </div>
+                                    <p>Mua hàng</p>
+                                    <a href="/" class="btn btn-primary">Truy cập</a>
+                                </div>
+                                <ul class="bubbles role">
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3" bis_skin_checked="1">
+                        <div class="card" bis_skin_checked="1">
+                            <div class="card-body border-b-secondary border-2" bis_skin_checked="1">
+                                <div class="upcoming-box" bis_skin_checked="1">
+                                    <div class="upcoming-icon bg-secondary" bis_skin_checked="1">
+                                        <i class="fa-solid fa-money-check-dollar"></i>
+                                    </div>
+                                    <p>Nạp tiền</p>
+                                    <a href="/nap-atm" class="btn btn-secondary">Truy cập</a>
+                                </div>
+                                <ul class="bubbles role role-user">
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12" bis_skin_checked="1">
+                        <div class="card" bis_skin_checked="1">
+                            <div class="card-body" bis_skin_checked="1">
+                                <div class="table-responsive custom-scrollbar" bis_skin_checked="1">
+                                    <div id="basic-1_wrapper" class="dataTables_wrapper no-footer" bis_skin_checked="1">
+                                        <table class="display dataTable no-footer" id="basic-1" role="grid" aria-describedby="basic-1_info">
+                                            <thead>
+                                            <tr role="row">
+                                                <th class="sorting_asc"  aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 50px;">ID</th>
+                                                <th class="sorting" aria-label="Position: activate to sort column ascending" style="width: 100px;">MÃ GIAO DỊCH</th>
+                                                <th class="sorting"  aria-label="Office: activate to sort column ascending" style="width: 200.641px;">SẢN PHẨM</th>
+                                                <th class="sorting"  aria-label="Age: activate to sort column ascending" style="width: 70px;">GIÁ TIỀN</th>
+                                                <th class="sorting"  aria-label="Start date: activate to sort column ascending" style="width: 120.109px;">NGÀY MUA</th>
+                                                <th class="sorting"  aria-label="Salary: activate to sort column ascending" style="width: 118.797px;">TRẠNG THÁI</th>
+                                                <th class="sorting"  aria-label="Action: activate to sort column ascending" style="width: 122.062px;">THÁO TÁC</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr role="row" class="odd" th:each="donhang, stat : ${donHangList}">
+                                                <td class="sorting_1" th:text="${stat.index + 1}">1</td>
+                                                <td th:text="${donhang.maGiaoDich}">Mã GD</td>
+                                                <td th:text="${donhang.sanpham.title}">Tên SP</td>
+                                                <td th:text="${donhang.sanpham.price + 'đ'}">0đ</td>
+                                                <td th:text="${donhang.time}">Thời gian</td>
+                                                <td><button class="btn btn-primary" type="button">Thành Công</button></td>
+                                                <td>
+                                                    <ul class="action">
+
+                                                        <li class="edit">
+                                                            <a href="#"
+                                                               class="download-btn"
+                                                               th:attr="data-id=${donhang.id}, data-don-hang=${donhang.noiDungDonHang}">
+                                                                <i class="fa-solid fa-download fa-2xl" style="color: #63E6BE;"></i>
+                                                            </a>
+                                                        </li>
+
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <script>
+                                            document.querySelectorAll('.download-btn').forEach(button => {
+                                                button.addEventListener('click', function(event) {
+                                                    event.preventDefault();
+                                                    const donHang = this.getAttribute('data-don-hang');
+                                                    const id = this.getAttribute('data-id');
+                                                    Swal.fire({
+                                                        title: 'Bạn có muốn tải xuống?',
+                                                        text: "Tệp sẽ chứa thông tin đơn hàng của bạn.",
+                                                        icon: 'question',
+                                                        showCancelButton: true,
+                                                        confirmButtonText: 'Tải xuống',
+                                                        cancelButtonText: 'Hủy',
+                                                    }).then((result) => {
+                                                        if (result.isConfirmed) {
+                                                            const fileContent = "Thông tin sản phẩm:\n\n" + donHang;
+                                                            const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
+                                                            const link = document.createElement('a');
+                                                            link.href = URL.createObjectURL(blob);
+                                                            link.download = `donhang_${id}.txt`;
+                                                            document.body.appendChild(link);
+                                                            link.click();
+                                                            document.body.removeChild(link);
+                                                        }
+                                                    });
+                                                });
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <div th:replace="~{app/footer :: footer}"></div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert Library -->
+</div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>

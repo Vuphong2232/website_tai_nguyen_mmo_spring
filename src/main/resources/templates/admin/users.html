@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4"></div>
+    </div>
+</div>
+<div class="tap-top"><i data-feather="chevrons-up"></i></div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}"></div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{admin/app/leftsider :: sider}"></div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Trang Chủ</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">Số Dư</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="list-product-header">
+                                    <form class="d-flex align-items-end flex-wrap gap-3">
+                                        <!-- 🔍 Input tìm kiếm -->
+                                        <div>
+                                            <label for="search" class="form-label mb-1">Tìm kiếm</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="search"
+                                                   name="search"
+                                                   placeholder="Nhập từ khóa..." />
+                                        </div>
+                                        <!-- 🔽 Select danh mục -->
+                                        <div>
+                                            <label for="user-filter" class="form-label mb-1">Chọn quyền</label>
+                                            <select class="form-select" id="user-filter" aria-label="Chọn danh mục">
+                                                <option value="">Tất cả quyền</option>
+                                                <option value="1">Admin</option>
+                                                <option value="0">User</option>
+                                                <option value="3">Khóa</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label for="price-filter" class="form-label mb-1">Chọn tiền</label>
+                                            <select class="form-select" id="price-filter" aria-label="Chọn danh mục">
+                                                <option value="">Lựa chọn giá</option>
+                                                <option value="asc">Từ thấp đến cao</option>
+                                                <option value="desc">Từ cao đến thấp</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button type="button"
+                                                    class="btn btn-secondary"
+                                                    id="btnReloadCategory">
+                                                <i class="fa fa-rotate-right"></i> Reload
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="list-product">
+                                    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                                        <div class="datatable-container">
+                                            <table class="table datatable-table" id="project-status">
+                                                <thead>
+                                                    <tr>
+                                                        <th data-sortable="true" style="width: 4.451682953311618%;">
+                                                            <a href="#" class="datatable-sorter">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input checkbox-primary" type="checkbox">
+                                                                </div>
+                                                            </a>
+                                                        </th>
+                                                        <th style="text-align: center; width: 24.9728555917481%;"><a href="#" class="datatable-sorter"> <span class="f-light f-w-600">Username</span></a></th>
+                                                        <th style="text-align: center; width: 13.355048859934854%;"><a href="#" class="datatable-sorter"> <span class="f-light f-w-600">Level </span></a></th>
+                                                        <th style="text-align: center; width: 13.029315960912053%;"><a href="#" class="datatable-sorter"> <span class="f-light f-w-600">Money</span></a></th>
+                                                        <th style="text-align: center; width: 13.029315960912053%;"><a href="#" class="datatable-sorter"> <span class="f-light f-w-600">Token</span></a></th>
+                                                        <th style="text-align: center; width: 11.400651465798045%;"><a href="#" class="datatable-sorter"> <span class="f-light f-w-600">Action</span></a></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="user-table-body">
+                                                    <tr th:each="u : ${userList}" th:attr="data-id=${u.id}" th:classappend="${u.level == 3} ? 'table-danger' : ''">
+                                                        <td>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input checkbox-primary" type="checkbox">
+                                                            </div>
+                                                        </td>
+
+                                                        <td style="text-align: center;">
+                                                            <span th:text="${u.username}">username</span>
+                                                        </td>
+
+                                                        <td style="text-align: center;">
+                                                            <span th:text="${u.level}">level</span>
+                                                        </td>
+
+                                                        <td style="text-align: center;">
+                                                            <span th:text="${u.money}">money</span>
+                                                        </td>
+
+                                                        <td style="text-align: center;">
+                                                            <span th:text="${u.token}">token</span>
+                                                        </td>
+
+                                                        <td style="display: none;">
+                                                            <span class="password" th:text="${u.password}"></span>
+                                                            <span class="tongNap" th:text="${u.tongNap}"></span>
+                                                            <span th:text="${u.id}"></span>
+                                                        </td>
+
+                                                        <td>
+                                                            <div class="product-action d-flex gap-2 justify-content-center">
+                                                                <button type="button" class="btn btn-sm btn-outline-primary edit-user" data-id="${u.id}">
+                                                                    <i class="fa-solid fa-pen"></i><span style="margin-left: 5px">Edit</span>
+                                                                </button>
+                                                                <!-- Nút Khóa -->
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger lock-user"
+                                                                        th:attr="data-id=${u.id}"
+                                                                        title="Khóa user">
+                                                                    <i class="fa-solid fa-ban"></i>
+                                                                    <span style="margin-left: 5px">Khóa</span>
+                                                                </button>
+
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+
+
+
+
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+
+            <!-- Modal sửa user -->
+            <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editUserModalLabel">Chỉnh sửa thông tin User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="edit-user-form">
+                                <input type="hidden" id="edit-id">
+
+                                <div class="mb-3">
+                                    <label for="edit-username" class="form-label">Username</label>
+                                    <input type="text" class="form-control" id="edit-username" placeholder="Đổi tên đăng nhập">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit-password" class="form-label">Password</label>
+                                    <input type="text" class="form-control" id="edit-password" placeholder="Đổi mật khẩu">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit-level" class="form-label">Quyền</label>
+                                    <select class="form-select" id="edit-level">
+                                        <option value="1">Admin</option>
+                                        <option value="0">User</option>
+                                        <option value="3">Khóa</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit-money" class="form-label">Money</label>
+                                    <input type="text" class="form-control" id="edit-money" placeholder="Số tiền">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="edit-token" class="form-label">Token</label>
+                                    <input type="text" class="form-control" id="edit-token" placeholder="Token">
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" id="btnEditUser">Lưu</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- jQuery + SweetAlert2 -->
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    // Gán dữ liệu vào form khi click "Edit"
+                    document.querySelectorAll(".edit-user").forEach(button => {
+                        button.addEventListener("click", function () {
+                            const row = button.closest("tr");
+
+                            document.getElementById("edit-id").value = row.getAttribute("data-id");
+                            document.getElementById("edit-username").value = row.querySelector("td:nth-child(2) span").innerText;
+                            document.getElementById("edit-level").value = row.querySelector("td:nth-child(3) span").innerText;
+                            document.getElementById("edit-money").value = row.querySelector("td:nth-child(4) span").innerText;
+                            document.getElementById("edit-token").value = row.querySelector("td:nth-child(5) span").innerText;
+                            document.getElementById("edit-password").value = row.querySelector(".password")?.innerText || "";
+
+                            // Mở modal
+                            const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+                            modal.show();
+                        });
+                    });
+
+                    // Bắt sự kiện nút "Lưu"
+                    document.getElementById("btnEditUser").addEventListener("click", function () {
+                        const data = {
+                            id: document.getElementById("edit-id").value,
+                            username: document.getElementById("edit-username").value,
+                            password: document.getElementById("edit-password").value,
+                            level: document.getElementById("edit-level").value,
+                            money: document.getElementById("edit-money").value,
+                            token: document.getElementById("edit-token").value
+                        };
+                    });
+                });
+
+                $("#btnEditUser").on("click", function (event) {
+                    event.preventDefault();
+                    $('#btnEditUser').html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
+
+                    const id = $("#edit-id").val();
+                    const username = $("#edit-username").val().trim();
+                    const password = $("#edit-password").val().trim();
+                    const level = $("#edit-level").val();
+                    const money = $("#edit-money").val().trim();
+                    const token = $("#edit-token").val().trim();
+
+                    if (!username || !password || level === "") {
+                        Swal.fire({
+                            title: "Thiếu thông tin",
+                            icon: "warning",
+                            text: "Vui lòng nhập đầy đủ username, password và quyền!",
+                            customClass: { confirmButton: "btn btn-warning" }
+                        });
+                        $('#btnEditUser').html('Lưu').prop('disabled', false);
+                        return;
+                    }
+
+                    const formData = {
+                        username: username,
+                        password: password,
+                        level: level,
+                        money: money,
+                        token: token
+                    };
+
+                    $.post("/admin/users/update/" + id, formData, function (data) {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: "Thành công",
+                                icon: "success",
+                                text: data.msg,
+                                customClass: { confirmButton: "btn btn-primary" }
+                            });
+                            setTimeout(function () { location.reload(); }, 1500);
+                        } else {
+                            Swal.fire({
+                                title: "Thất bại",
+                                icon: "error",
+                                text: data.msg,
+                                customClass: { confirmButton: "btn btn-danger" }
+                            });
+                        }
+                        $('#btnEditUser').html('Lưu').prop('disabled', false);
+                    }, "json").fail(function () {
+                        Swal.fire({
+                            title: "Lỗi server",
+                            icon: "error",
+                            text: "Không thể gửi yêu cầu đến máy chủ.",
+                            customClass: { confirmButton: "btn btn-danger" }
+                        });
+                        $('#btnEditUser').html('Lưu').prop('disabled', false);
+                    });
+                });
+
+                $(document).ready(function () {
+                    $(".lock-user").on("click", function () {
+                        const userId = $(this).data("id");
+
+                        Swal.fire({
+                            title: "Bạn có chắc muốn KHÓA người dùng này?",
+                            text: "Level sẽ được chuyển sang 3",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonText: "Có, Khóa ngay",
+                            cancelButtonText: "Hủy",
+                            customClass: {
+                                confirmButton: "btn btn-danger",
+                                cancelButton: "btn btn-secondary"
+                            },
+                            buttonsStyling: false
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                $.post("/admin/users/lock/" + userId, function (data) {
+                                    if (data.status === 'success') {
+                                        Swal.fire({
+                                            title: "Đã khóa",
+                                            icon: "success",
+                                            text: data.msg,
+                                            customClass: { confirmButton: "btn btn-primary" }
+                                        });
+                                        setTimeout(() => location.reload(), 1500);
+                                    } else {
+                                        Swal.fire({
+                                            title: "Lỗi",
+                                            icon: "error",
+                                            text: data.msg,
+                                            customClass: { confirmButton: "btn btn-danger" }
+                                        });
+                                    }
+                                }, "json").fail(function () {
+                                    Swal.fire({
+                                        title: "Lỗi máy chủ",
+                                        icon: "error",
+                                        text: "Không thể gửi yêu cầu.",
+                                        customClass: { confirmButton: "btn btn-danger" }
+                                    });
+                                });
+                            }
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#price-filter").on("change", function () {
+                        const order = $(this).val();
+                        if (!order) return;
+
+                        const $tbody = $("#user-table-body");
+                        const $rows = $tbody.find("tr").get();
+
+                        // Hàm chuyển đổi tiền tệ từ text sang số
+                        const parseMoney = (text) => {
+                            return parseFloat(text.replace(/[^\d]/g, "")) || 0;
+                        };
+
+                        $rows.sort(function (a, b) {
+                            const moneyA = parseMoney($(a).find("td:nth-child(4) span").text());
+                            const moneyB = parseMoney($(b).find("td:nth-child(4) span").text());
+                            return order === "asc" ? moneyA - moneyB : moneyB - moneyA;
+                        });
+
+                        // Xóa cũ, gắn lại theo thứ tự mới
+                        $.each($rows, function (index, row) {
+                            $tbody.append(row);
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#user-filter").on("change", function () {
+                        const selectedLevel = $(this).val(); // "1", "0", "3", hoặc ""
+
+                        $("#user-table-body tr").each(function () {
+                            const levelText = $(this).find("td:nth-child(3) span").text().trim(); // cột level
+
+                            if (!selectedLevel || levelText === selectedLevel) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#search").on("input", function () {
+                        const keyword = $(this).val().toLowerCase();
+
+                        $("#user-table-body tr").each(function () {
+                            const username = $(this).find("td:nth-child(2) span").text().toLowerCase();
+                            const token = $(this).find("td:nth-child(5) span").text().toLowerCase();
+
+                            if (
+                                username.includes(keyword) ||
+                                token.includes(keyword)
+                            ) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                });
+                
+                $(document).ready(function () {
+                    $("#btnReloadCategory").on("click", function () {
+                        // Reset tất cả bộ lọc
+                        $("#price-filter").val("");
+                        $("#user-filter").val("");
+                        $("#search").val("");
+
+                        // Hiển thị lại tất cả dòng user
+                        $("#user-table-body tr").show();
+                    });
+                });
+            </script>
+
+
+
+
+
+
+
+
+
+        </div>
+
+
+
+
+        <div th:replace="~{app/footer :: footer}"></div>
+    </div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4"></div>
+    </div>
+</div>
+<div class="tap-top"><i data-feather="chevrons-up"></i></div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}"></div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{admin/app/leftsider :: sider}"></div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Trang Chủ</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">Số Dư</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="list-product-header">
+                                    <form class="d-flex align-items-end flex-wrap gap-3">
+                                        <!-- 🔍 Input tìm kiếm -->
+                                        <div>
+                                            <label for="search" class="form-label mb-1">Tìm kiếm</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="search"
+                                                   name="search"
+                                                   placeholder="Nhập từ khóa..." />
+                                        </div>
+                                        <!-- 🔽 Select ngân hàng -->
+                                        <div>
+                                            <label for="bank-filter" class="form-label mb-1">Chọn ngân hàng</label>
+                                            <select class="form-select" id="bank-filter" aria-label="Chọn ngân hàng">
+                                                <option value="">Tất cả ngân hàng</option>
+                                                <option th:each="bank : ${bankList}"
+                                                        th:value="${bank.ngangHang}"
+                                                        th:text="${bank.ngangHang}">
+                                                </option>
+                                            </select>
+                                        </div>
+
+
+                                        <!-- 🔽 Select trạng thái -->
+                                        <div>
+                                            <label for="status-filter" class="form-label">Lọc theo trạng thái:</label>
+                                            <select class="form-select" id="status-filter">
+                                                <option value="">Tất cả</option>
+                                                <option value="hoatdong">Hoạt động</option>
+                                                <option value="dunghoatdong">Dừng hoạt động</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button type="button"
+                                                    class="btn btn-secondary"
+                                                    id="btnReloadBank">
+                                                <i class="fa fa-rotate-right"></i> Reload
+                                            </button>
+                                        </div>
+
+                                        <div class="ms-auto">
+                                            <!-- Label ẩn (để canh dòng) -->
+                                            <label class="form-label mb-1 d-block invisible">Thêm</label>
+
+                                            <!-- ✅ Nút mở modal -->
+                                            <button type="button"
+                                                    class="btn btn-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalAddBank"> <!-- Trùng với ID modal -->
+                                                <i class="fa fa-plus"></i> Thêm ngân hàng
+                                            </button>
+                                        </div>
+
+
+                                    </form>
+                                </div>
+
+
+                                <div class="list-bank">
+                                    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                                        <div class="datatable-container">
+                                            <table class="table datatable-table" id="bank-table">
+                                                <thead>
+                                                <tr>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600"> </span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">Chủ tài khoản</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">Số tài khoản</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">Ngân hàng</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">Min Nạp</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">Trạng thái</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600">Action</span></th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr th:each="bank : ${bankList}" class="bank-row"
+                                                        th:data-id="${bank.id}"
+                                                        th:data-ctk="${bank.ctk}"
+                                                        th:data-stk="${bank.stk}"
+                                                        th:data-ngan-hang="${bank.ngangHang}"
+                                                        th:data-min-nap="${bank.minNap}"
+                                                        th:data-status="${bank.status}">
+
+                                                        <td>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input checkbox-primary" type="checkbox">
+                                                            </div>
+                                                        </td>
+
+                                                        <td class="ctk" style="text-align: left;">
+                                                            <span th:text="${bank.ctk}" class="one-line-ellipsis">Chủ TK</span>
+                                                        </td>
+
+                                                        <td class="stk" style="text-align: center;">
+                                                            <span th:text="${bank.stk}">STK</span>
+                                                        </td>
+
+                                                        <td class="nganHang" style="text-align: center;">
+                                                            <span th:text="${bank.ngangHang}">Ngân hàng</span>
+                                                        </td>
+
+                                                        <td class="minNap" style="text-align: center;">
+                                                            <span th:text="${#numbers.formatInteger(bank.minNap, 0, 'POINT')}">Min Nạp</span>
+                                                        </td>
+
+                                                        <td class="status" th:attr="data-status=${bank.status}" style="text-align: center;">
+                                                            <span th:classappend="${bank.status == 'hoatdong'} ? 'badge badge-light-success' : 'badge badge-light-danger'"
+                                                                  th:text="${bank.status == 'hoatdong'} ? 'Hoạt động' : 'Dừng hoạt động'">
+                                                            </span>
+                                                        </td>
+
+
+                                                        <td>
+                                                            <div class="product-action d-flex gap-2 justify-content-center">
+                                                                <!-- Nút Sửa -->
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-primary edit-bank"
+                                                                        title="Sửa tài khoản">
+                                                                    <i class="fa-solid fa-pen"></i>
+                                                                    <span style="margin-left: 5px">Edit</span>
+                                                                </button>
+
+                                                                <!-- Nút Xóa -->
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger delete-bank"
+                                                                        title="Xóa tài khoản"
+                                                                        th:attr="data-id=${bank.id}">
+                                                                    <i class="fa-solid fa-trash"></i>
+                                                                    <span style="margin-left: 5px">DELETE</span>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Modal thêm ngân hàng -->
+            <div class="modal fade" id="modalAddBank" tabindex="-1" aria-labelledby="modalAddBankLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <form id="formAddBankAjax">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAddBankLabel">Thêm tài khoản ngân hàng</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <!-- Chủ tài khoản -->
+                                <div class="mb-3">
+                                    <label for="input-ctk" class="form-label">Chủ tài khoản</label>
+                                    <input type="text" class="form-control" name="ctk" id="input-ctk" required>
+                                </div>
+
+                                <!-- Số tài khoản -->
+                                <div class="mb-3">
+                                    <label for="input-stk" class="form-label">Số tài khoản</label>
+                                    <input type="text" class="form-control" name="stk" id="input-stk" required>
+                                </div>
+
+                                <!-- Ngân hàng -->
+                                <div class="mb-3">
+                                    <label for="select-nganHang" class="form-label">Ngân hàng</label>
+                                    <select class="form-select" name="ngangHang" id="select-nganHang" required>
+                                        <option disabled selected>Chọn ngân hàng</option>
+                                        <option value="Agribank">Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam (Agribank)</option>
+                                        <option value="Vietcombank">Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank)</option>
+                                        <option value="VietinBank">Ngân hàng TMCP Công thương Việt Nam (VietinBank)</option>
+                                        <option value="BIDV">Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)</option>
+                                        <option value="ACB">Ngân hàng TMCP Á Châu (ACB)</option>
+                                        <option value="Techcombank">Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank)</option>
+                                        <option value="MB">Ngân hàng TMCP Quân Đội (MB)</option>
+                                        <option value="Sacombank">Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank)</option>
+                                        <option value="VPBank">Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank)</option>
+                                        <option value="HDBank">Ngân hàng TMCP Phát triển TP.HCM (HDBank)</option>
+                                        <option value="SHB">Ngân hàng TMCP Sài Gòn – Hà Nội (SHB)</option>
+                                        <option value="SeABank">Ngân hàng TMCP Đông Nam Á (SeABank)</option>
+                                        <option value="VIB">Ngân hàng TMCP Quốc tế Việt Nam (VIB)</option>
+                                        <option value="TPBank">Ngân hàng TMCP Tiên Phong (TPBank)</option>
+                                        <option value="OCB">Ngân hàng TMCP Phương Đông (OCB)</option>
+                                        <option value="Eximbank">Ngân hàng TMCP Xuất Nhập Khẩu Việt Nam (Eximbank)</option>
+                                        <option value="LienVietPostBank">Ngân hàng TMCP Bưu điện Liên Việt (LienVietPostBank)</option>
+                                        <option value="SCB">Ngân hàng TMCP Sài Gòn (SCB)</option>
+                                        <option value="MSB">Ngân hàng TMCP Hàng Hải Việt Nam (MSB)</option>
+                                        <option value="DongA Bank">Ngân hàng TMCP Đông Á (DongA Bank)</option>
+                                        <option value="Nam A Bank">Ngân hàng TMCP Nam Á (Nam A Bank)</option>
+                                        <option value="VietABank">Ngân hàng TMCP Việt Á (VietABank)</option>
+                                        <option value="NCB">Ngân hàng TMCP Quốc dân (NCB)</option>
+                                        <option value="Vietbank">Ngân hàng TMCP Việt Nam Thương Tín (Vietbank)</option>
+                                        <option value="ABBANK">Ngân hàng TMCP An Bình (ABBANK)</option>
+                                        <option value="Bac A Bank">Ngân hàng TMCP Bắc Á (Bac A Bank)</option>
+                                        <option value="BaoViet Bank">Ngân hàng TMCP Bảo Việt (BaoViet Bank)</option>
+                                        <option value="PG Bank">Ngân hàng TMCP Xăng dầu Petrolimex (PG Bank)</option>
+                                        <option value="PVcomBank">Ngân hàng TMCP Đại Chúng Việt Nam (PVcomBank)</option>
+                                        <option value="Viet Capital Bank">Ngân hàng TMCP Bản Việt (Viet Capital Bank)</option>
+                                        <option value="Saigonbank">Ngân hàng TMCP Sài Gòn Công Thương (Saigonbank)</option>
+                                        <option value="OceanBank">Ngân hàng TNHH MTV Đại Dương (OceanBank)</option>
+                                        <option value="GPBank">Ngân hàng TNHH MTV Dầu khí Toàn Cầu (GPBank)</option>
+                                        <option value="CB">Ngân hàng TNHH MTV Xây dựng Việt Nam (CB)</option>
+                                        <option value="VBSP">Ngân hàng Chính sách xã hội Việt Nam (VBSP)</option>
+                                        <option value="VDB">Ngân hàng Phát triển Việt Nam (VDB)</option>
+                                        <option value="Co-opBank">Ngân hàng Hợp tác xã Việt Nam (Co-opBank)</option>
+                                        <option value="Indovina Bank">Ngân hàng TNHH Indovina (Indovina Bank)</option>
+                                        <option value="VRB">Ngân hàng Liên doanh Việt Nga (VRB)</option>
+                                        <option value="ANZ">Ngân hàng TNHH MTV ANZ Việt Nam (ANZ)</option>
+                                        <option value="HSBC">Ngân hàng TNHH MTV HSBC Việt Nam (HSBC)</option>
+                                        <option value="Standard Chartered">Ngân hàng TNHH MTV Standard Chartered Việt Nam (Standard Chartered)</option>
+                                        <option value="Shinhan Bank">Ngân hàng TNHH MTV Shinhan Việt Nam (Shinhan Bank)</option>
+                                        <option value="CIMB">Ngân hàng TNHH MTV CIMB Việt Nam (CIMB)</option>
+                                        <option value="Public Bank">Ngân hàng TNHH MTV Public Bank Việt Nam (Public Bank)</option>
+                                        <option value="Woori Bank">Ngân hàng TNHH MTV Woori Việt Nam (Woori Bank)</option>
+                                        <option value="UOB">Ngân hàng TNHH MTV UOB Việt Nam (UOB)</option>
+                                        <option value="Hong Leong Bank">Ngân hàng TNHH MTV Hong Leong Việt Nam (Hong Leong Bank)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Số tiền nạp tối thiểu -->
+                                <div class="mb-3">
+                                    <label for="input-minNap" class="form-label">Số tiền nạp tối thiểu</label>
+                                    <input type="number" class="form-control" name="minNap" id="input-minNap" required>
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="mb-3">
+                                    <label for="select-status-bank" class="form-label">Trạng thái</label>
+                                    <select class="form-select" name="status" id="select-status-bank" required>
+                                        <option disabled selected>Chọn trạng thái</option>
+                                        <option value="hoatdong">Hoạt động</option>
+                                        <option value="dunghoatdong">Dừng hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="btnAddBank">Thêm</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal sửa ngân hàng -->
+            <div class="modal fade" id="modalEditBank" tabindex="-1" aria-labelledby="modalEditBankLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <form id="formEditBankAjax">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditBankLabel">Sửa tài khoản ngân hàng</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <input type="hidden" id="edit-bank-id">
+
+                                <!-- Chủ tài khoản -->
+                                <div class="mb-3">
+                                    <label for="edit-ctk" class="form-label">Chủ tài khoản</label>
+                                    <input type="text" class="form-control" id="edit-ctk" name="ctk" required>
+                                </div>
+
+                                <!-- Số tài khoản -->
+                                <div class="mb-3">
+                                    <label for="edit-stk" class="form-label">Số tài khoản</label>
+                                    <input type="text" class="form-control" id="edit-stk" name="stk" required>
+                                </div>
+
+                                <!-- Ngân hàng -->
+                                <div class="mb-3">
+                                    <label for="edit-nganHang" class="form-label">Ngân hàng</label>
+                                    <select class="form-select" id="edit-nganHang" name="ngangHang" required>
+                                        <option disabled selected>Chọn ngân hàng</option>
+                                        <option value="Agribank">Ngân hàng Nông nghiệp và Phát triển Nông thôn Việt Nam (Agribank)</option>
+                                        <option value="Vietcombank">Ngân hàng TMCP Ngoại thương Việt Nam (Vietcombank)</option>
+                                        <option value="VietinBank">Ngân hàng TMCP Công thương Việt Nam (VietinBank)</option>
+                                        <option value="BIDV">Ngân hàng TMCP Đầu tư và Phát triển Việt Nam (BIDV)</option>
+                                        <option value="ACB">Ngân hàng TMCP Á Châu (ACB)</option>
+                                        <option value="Techcombank">Ngân hàng TMCP Kỹ Thương Việt Nam (Techcombank)</option>
+                                        <option value="MB">Ngân hàng TMCP Quân Đội (MB)</option>
+                                        <option value="Sacombank">Ngân hàng TMCP Sài Gòn Thương Tín (Sacombank)</option>
+                                        <option value="VPBank">Ngân hàng TMCP Việt Nam Thịnh Vượng (VPBank)</option>
+                                        <option value="HDBank">Ngân hàng TMCP Phát triển TP.HCM (HDBank)</option>
+                                        <option value="SHB">Ngân hàng TMCP Sài Gòn – Hà Nội (SHB)</option>
+                                        <option value="SeABank">Ngân hàng TMCP Đông Nam Á (SeABank)</option>
+                                        <option value="VIB">Ngân hàng TMCP Quốc tế Việt Nam (VIB)</option>
+                                        <option value="TPBank">Ngân hàng TMCP Tiên Phong (TPBank)</option>
+                                        <option value="OCB">Ngân hàng TMCP Phương Đông (OCB)</option>
+                                        <option value="Eximbank">Ngân hàng TMCP Xuất Nhập Khẩu Việt Nam (Eximbank)</option>
+                                        <option value="LienVietPostBank">Ngân hàng TMCP Bưu điện Liên Việt (LienVietPostBank)</option>
+                                        <option value="SCB">Ngân hàng TMCP Sài Gòn (SCB)</option>
+                                        <option value="MSB">Ngân hàng TMCP Hàng Hải Việt Nam (MSB)</option>
+                                        <option value="DongA Bank">Ngân hàng TMCP Đông Á (DongA Bank)</option>
+                                        <option value="Nam A Bank">Ngân hàng TMCP Nam Á (Nam A Bank)</option>
+                                        <option value="VietABank">Ngân hàng TMCP Việt Á (VietABank)</option>
+                                        <option value="NCB">Ngân hàng TMCP Quốc dân (NCB)</option>
+                                        <option value="Vietbank">Ngân hàng TMCP Việt Nam Thương Tín (Vietbank)</option>
+                                        <option value="ABBANK">Ngân hàng TMCP An Bình (ABBANK)</option>
+                                        <option value="Bac A Bank">Ngân hàng TMCP Bắc Á (Bac A Bank)</option>
+                                        <option value="BaoViet Bank">Ngân hàng TMCP Bảo Việt (BaoViet Bank)</option>
+                                        <option value="PG Bank">Ngân hàng TMCP Xăng dầu Petrolimex (PG Bank)</option>
+                                        <option value="PVcomBank">Ngân hàng TMCP Đại Chúng Việt Nam (PVcomBank)</option>
+                                        <option value="Viet Capital Bank">Ngân hàng TMCP Bản Việt (Viet Capital Bank)</option>
+                                        <option value="Saigonbank">Ngân hàng TMCP Sài Gòn Công Thương (Saigonbank)</option>
+                                        <option value="OceanBank">Ngân hàng TNHH MTV Đại Dương (OceanBank)</option>
+                                        <option value="GPBank">Ngân hàng TNHH MTV Dầu khí Toàn Cầu (GPBank)</option>
+                                        <option value="CB">Ngân hàng TNHH MTV Xây dựng Việt Nam (CB)</option>
+                                        <option value="VBSP">Ngân hàng Chính sách xã hội Việt Nam (VBSP)</option>
+                                        <option value="VDB">Ngân hàng Phát triển Việt Nam (VDB)</option>
+                                        <option value="Co-opBank">Ngân hàng Hợp tác xã Việt Nam (Co-opBank)</option>
+                                        <option value="Indovina Bank">Ngân hàng TNHH Indovina (Indovina Bank)</option>
+                                        <option value="VRB">Ngân hàng Liên doanh Việt Nga (VRB)</option>
+                                        <option value="ANZ">Ngân hàng TNHH MTV ANZ Việt Nam (ANZ)</option>
+                                        <option value="HSBC">Ngân hàng TNHH MTV HSBC Việt Nam (HSBC)</option>
+                                        <option value="Standard Chartered">Ngân hàng TNHH MTV Standard Chartered Việt Nam (Standard Chartered)</option>
+                                        <option value="Shinhan Bank">Ngân hàng TNHH MTV Shinhan Việt Nam (Shinhan Bank)</option>
+                                        <option value="CIMB">Ngân hàng TNHH MTV CIMB Việt Nam (CIMB)</option>
+                                        <option value="Public Bank">Ngân hàng TNHH MTV Public Bank Việt Nam (Public Bank)</option>
+                                        <option value="Woori Bank">Ngân hàng TNHH MTV Woori Việt Nam (Woori Bank)</option>
+                                        <option value="UOB">Ngân hàng TNHH MTV UOB Việt Nam (UOB)</option>
+                                        <option value="Hong Leong Bank">Ngân hàng TNHH MTV Hong Leong Việt Nam (Hong Leong Bank)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Min nạp -->
+                                <div class="mb-3">
+                                    <label for="edit-minNap" class="form-label">Số tiền nạp tối thiểu</label>
+                                    <input type="number" class="form-control" id="edit-minNap" name="minNap" required>
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="mb-3">
+                                    <label for="edit-status" class="form-label">Trạng thái</label>
+                                    <select class="form-select" id="edit-status" name="status" required>
+                                        <option value="hoatdong">Hoạt động</option>
+                                        <option value="dunghoatdong">Dừng hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="btnUpdateBank">Cập nhật</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- jQuery + SweetAlert2 -->
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+            <script>
+                $("#btnAddBank").on("click", function (event) {
+                    event.preventDefault();
+                    $('#btnAddBank').html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
+
+                    // Lấy dữ liệu từ form
+                    const ctk = $("#input-ctk").val().trim();
+                    const stk = $("#input-stk").val().trim();
+                    const ngangHang = $("#select-nganHang").val();
+                    const minNap = $("#input-minNap").val().trim();
+                    const status = $("#select-status-bank").val();
+
+                    // Kiểm tra thiếu thông tin bắt buộc
+                    if (!ctk || !stk || !ngangHang || !minNap || !status) {
+                        Swal.fire({
+                            title: "Thiếu thông tin",
+                            icon: "warning",
+                            text: "Vui lòng điền đầy đủ các trường bắt buộc!",
+                            customClass: {
+                                confirmButton: "btn btn-warning"
+                            }
+                        });
+                        $('#btnAddBank').html('Thêm').prop('disabled', false);
+                        return;
+                    }
+
+                    // Tạo object dữ liệu
+                    const formData = {
+                        ctk: ctk,
+                        stk: stk,
+                        ngangHang: ngangHang,
+                        minNap: minNap,
+                        status: status
+                    };
+
+                    // Gửi POST tới Controller
+                    $.post("/admin/topup/add", formData, function (data) {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: "Thành công",
+                                icon: "success",
+                                text: data.msg,
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            Swal.fire({
+                                title: "Lỗi",
+                                icon: "error",
+                                text: data.msg,
+                                customClass: {
+                                    confirmButton: "btn btn-danger"
+                                }
+                            });
+                        }
+                        $('#btnAddBank').html('Thêm').prop('disabled', false);
+                    }, "json").fail(function () {
+                        Swal.fire({
+                            title: "Lỗi server",
+                            icon: "error",
+                            text: "Không thể gửi yêu cầu đến máy chủ.",
+                            customClass: {
+                                confirmButton: "btn btn-danger"
+                            }
+                        });
+                        $('#btnAddBank').html('Thêm').prop('disabled', false);
+                    });
+                });
+
+                $(document).on("click", ".edit-bank", function () {
+                    const row = $(this).closest("tr");
+
+                    $("#edit-bank-id").val(row.data("id"));
+                    $("#edit-ctk").val(row.data("ctk"));
+                    $("#edit-stk").val(row.data("stk"));
+                    $("#edit-nganHang").val(row.data("ngan-hang"));
+                    $("#edit-minNap").val(row.data("min-nap"));
+                    $("#edit-status").val(row.data("status"));
+
+                    $("#modalEditBank").modal("show");
+                });
+
+                $("#btnUpdateBank").on("click", function () {
+                    const id = $("#edit-bank-id").val();
+                    const formData = {
+                        ctk: $("#edit-ctk").val().trim(),
+                        stk: $("#edit-stk").val().trim(),
+                        ngangHang: $("#edit-nganHang").val(),
+                        minNap: $("#edit-minNap").val().trim(),
+                        status: $("#edit-status").val()
+                    };
+
+                    if (!formData.ctk || !formData.stk || !formData.ngangHang || !formData.minNap || !formData.status) {
+                        Swal.fire("Thiếu thông tin", "Vui lòng nhập đầy đủ thông tin.", "warning");
+                        return;
+                    }
+
+                    $.post(`/admin/topup/update/${id}`, formData, function (data) {
+                        if (data.status === "success") {
+                            Swal.fire("Thành công", data.msg, "success");
+                            setTimeout(() => window.location.reload(), 1500);
+                        } else {
+                            Swal.fire("Lỗi", data.msg, "error");
+                        }
+                    }).fail(() => {
+                        Swal.fire("Lỗi server", "Không thể cập nhật dữ liệu.", "error");
+                    });
+                });
+
+                $(document).on("click", ".delete-bank", function () {
+                    const bankId = $(this).data("id");
+
+                    Swal.fire({
+                        title: "Xác nhận xoá",
+                        text: "Bạn có chắc chắn muốn xoá tài khoản ngân hàng này?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Xoá",
+                        cancelButtonText: "Hủy",
+                        customClass: {
+                            confirmButton: "btn btn-danger",
+                            cancelButton: "btn btn-secondary"
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: `/admin/topup/delete/${bankId}`,
+                                method: "DELETE",
+                                success: function (data) {
+                                    if (data.status === "success") {
+                                        Swal.fire("Đã xoá", data.msg, "success");
+                                        setTimeout(() => window.location.reload(), 1500);
+                                    } else {
+                                        Swal.fire("Lỗi", data.msg, "error");
+                                    }
+                                },
+                                error: function () {
+                                    Swal.fire("Lỗi server", "Không thể xoá dữ liệu.", "error");
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#search").on("input", function () {
+                        const keyword = $(this).val().toLowerCase().trim();
+
+                        $(".bank-row").each(function () {
+                            const ctk = $(this).find(".ctk").text().toLowerCase();
+                            const stk = $(this).find(".stk").text().toLowerCase();
+
+                            const match = ctk.includes(keyword) || stk.includes(keyword);
+
+                            if (match) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#bank-filter").on("change", function () {
+                        const selectedBank = $(this).val().toLowerCase().trim();
+
+                        $(".bank-row").each(function () {
+                            const bankName = $(this).find(".nganHang").text().toLowerCase().trim();
+
+                            const match = !selectedBank || bankName === selectedBank;
+
+                            if (match) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#btnReloadBank").on("click", function () {
+                        // Reset giá trị các filter về mặc định
+                        $("#search").val("");
+                        $("#bank-filter").val("");
+                        $("#status-filter").val("");
+
+                        // Hiện tất cả các dòng trong bảng
+                        $(".bank-row").show();
+                    });
+                });
+
+                $("#status-filter").on("change", function () {
+                    const selectedStatus = $(this).val().toLowerCase().trim();
+
+                    $(".bank-row").each(function () {
+                        const rowStatus = $(this).find(".status").data("status"); // ✅ dùng data-status
+
+                        const match = !selectedStatus || rowStatus === selectedStatus;
+
+                        if (match) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    });
+                });
+
+            </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                </div>
+
+
+
+
+        <div th:replace="~{app/footer :: footer}"></div>
+    </div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>
