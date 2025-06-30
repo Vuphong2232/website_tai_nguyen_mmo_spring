@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4"></div>
+    </div>
+</div>
+<div class="tap-top"><i data-feather="chevrons-up"></i></div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}"></div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{admin/app/leftsider :: sider}"></div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Trang Chủ</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">Số Dư</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="list-product-header">
+                                    <form class="d-flex align-items-end flex-wrap gap-3">
+                                        <!-- 🔍 Input tìm kiếm -->
+                                        <div>
+                                            <label for="search" class="form-label mb-1">Tìm kiếm</label>
+                                            <input type="text"
+                                                   class="form-control"
+                                                   id="search"
+                                                   name="search"
+                                                   placeholder="Nhập từ khóa..." />
+                                        </div>
+                                        <!-- 🔽 Select danh mục -->
+                                        <div>
+                                            <label for="title-filter" class="form-label mb-1">Chọn danh mục</label>
+                                            <select class="form-select" id="title-filter" aria-label="Chọn danh mục">
+                                                <option value="">Tất cả danh mục</option>
+                                                <option th:each="item : ${danhmucspList}"
+                                                        th:value="${item.title}"
+                                                        th:text="${item.title}">
+                                                </option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            <label for="title-filter" class="form-label mb-1">Chọn giá bán</label>
+                                            <select class="form-select" id="price-filter" aria-label="Chọn danh mục">
+                                                <option value="">Lựa chọn giá</option>
+                                                <option value="asc">Từ thấp đến cao</option>
+                                                <option value="desc">Từ cao đến thấp</option>
+                                            </select>
+                                        </div>
+                                        <!-- 🔽 Select trạng thái -->
+                                        <div>
+                                            <label for="status-filter" class="form-label">Lọc theo trạng thái:</label>
+                                            <select class="form-select" id="status-filter">
+                                                <option value="">Tất cả</option>
+                                                <option value="hoatdong">Hoạt động</option>
+                                                <option value="dunghoatdong">Dừng hoạt động</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <button type="button"
+                                                    class="btn btn-secondary"
+                                                    id="btnReloadCategory">
+                                                <i class="fa fa-rotate-right"></i> Reload
+                                            </button>
+                                        </div>
+
+                                        <!-- ➕ Nút Add Category -->
+                                        <div class="ms-auto">
+                                            <label class="form-label mb-1 d-block invisible">Thêm</label>
+                                            <button type="button"
+                                                    class="btn btn-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#modalAddProduct">
+                                                <i class="fa fa-plus"></i> Thêm sản phẩm
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+
+                                <div class="list-product list-category">
+                                    <div class="datatable-wrapper datatable-loading no-footer sortable searchable fixed-columns">
+                                        <div class="datatable-container">
+                                            <table class="table datatable-table" id="category-table">
+                                                <thead>
+                                                <tr>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600"> </span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-200"> Danh mục</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600"> Tên sản phẩm</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600"> Giá</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600"> Số lượng</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600"> Quốc gia</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-600"> Trạng thái</span></th>
+                                                    <th style="text-align: center;"> <span class="f-light f-w-1100"> Action</span></th>
+                                                </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <tr th:each="sp : ${productList}" th:attr="data-id=${sp.id}">
+                                                        <td>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input checkbox-primary" type="checkbox">
+                                                            </div>
+                                                        </td>
+                                                        <td style="text-align: center;">
+                                                            <span th:text="${sp.danhMucSp != null ? sp.danhMucSp.title : '---'}">Danh mục</span> </td>
+                                                        <td style="text-align: left;">
+                                                            <span th:text="${sp.title}" class="one-line-ellipsis">Tên SP</span> </td>
+                                                        <td style="text-align: center;">
+                                                            <span th:text="${sp.price}">Giá</span>
+                                                        </td>
+
+                                                        <td style="text-align: center;">
+                                                            <span hidden class="ttSp" th:text="${sp.ttSp}"></span>
+                                                            <span class="soTaiKhoan"></span>
+                                                            <script>
+                                                                document.addEventListener("DOMContentLoaded", function () {
+                                                                    const ttSpElements = document.querySelectorAll(".ttSp");
+                                                                    const soTaiKhoanElements = document.querySelectorAll(".soTaiKhoan");
+
+                                                                    ttSpElements.forEach((el, index) => {
+                                                                        let data = el.textContent || el.innerText;
+                                                                        data = data.replace(/\\n/g, "\n"); // Xử lý nếu chuỗi bị escape
+                                                                        const lines = data.split('\n').filter(line => line.trim() !== "");
+                                                                        soTaiKhoanElements[index].textContent = "" + lines.length;
+                                                                    });
+                                                                });
+                                                            </script>
+                                                        </td>
+
+                                                        <td style="display: none;">
+                                                            <span class="id" th:text="${sp.id}"></span>
+                                                            <span class="listSp" th:text="${sp.listSp}"></span>
+                                                            <span class="ngBan" th:text="${sp.ngBan}"></span>
+                                                        </td>
+
+                                                        <td style="text-align: center;">
+                                                            <span th:text="${sp.quocGia}">Quốc gia</span>
+                                                        </td>
+                                                        <td>
+                                                            <span th:classappend="${sp.status == 'hoatdong'} ? 'badge badge-light-success' : 'badge badge-light-danger'"
+                                                                  th:text="${sp.status == 'hoatdong'} ? 'Hoạt động' : 'Dừng hoạt động'">
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="product-action d-flex gap-2 justify-content-center">
+                                                                <!-- Nút Sửa -->
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-primary edit-product"
+                                                                        title="Sửa sản phẩm">
+                                                                    <i class="fa-solid fa-pen"></i>
+                                                                    <span style="margin-left: 5px">Edit</span>
+                                                                </button>
+
+                                                                <!-- Nút Xóa -->
+                                                                <button type="button"
+                                                                        class="btn btn-sm btn-outline-danger delete-product"
+                                                                        title="Xóa danh mục">
+                                                                    <i class="fa-solid fa-trash"></i>
+                                                                    <span style="margin-left: 5px">DELETE</span>
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal thêm sản phẩm -->
+            <div class="modal fade" id="modalAddProduct" tabindex="-1" aria-labelledby="modalAddProductLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <form id="formAddProductAjax">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalAddProductLabel">Thêm sản phẩm</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <!-- Tên sản phẩm -->
+                                <div class="mb-3">
+                                    <label for="input-product-title" class="form-label">Tên sản phẩm</label>
+                                    <input type="text" class="form-control" name="title" id="input-product-title" required>
+                                </div>
+
+                                <!-- Giá -->
+                                <div class="mb-3">
+                                    <label for="input-product-price" class="form-label">Giá</label>
+                                    <input type="number" class="form-control" name="price" id="input-product-price" required>
+                                </div>
+
+                                <!-- Danh mục -->
+                                <div class="mb-3">
+                                    <label for="select-category-product" class="form-label">Danh mục</label>
+                                    <select class="form-select" name="categoryId" id="select-category-product" required>
+                                        <option disabled selected>Chọn danh mục</option>
+                                        <option th:each="item : ${danhmucspList}"
+                                                th:value="${item.id}"
+                                                th:text="${item.title}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- Thông tin sản phẩm -->
+                                <div class="mb-3">
+                                    <label for="textarea-product-ttsp" class="form-label">Thông tin chi tiết</label>
+                                    <textarea class="form-control" name="ttSp" id="textarea-product-ttsp" rows="3"></textarea>
+                                </div>
+
+                                <!-- Danh sách tài khoản -->
+                                <div class="mb-3">
+                                    <label for="textarea-product-list" class="form-label">Danh sách tài khoản (list_sp)</label>
+                                    <textarea class="form-control" name="listSp" id="textarea-product-list" rows="3" placeholder="user|pass|2fa\n..."></textarea>
+                                </div>
+
+                                <!-- Người bán -->
+                                <div class="mb-3">
+                                    <label for="input-ngBan" class="form-label">Người bán</label>
+                                    <input type="text" class="form-control" name="ngBan" id="input-ngBan">
+                                </div>
+
+                                <!-- Quốc gia -->
+                                <div class="mb-3">
+                                    <label for="input-quocGia" class="form-label">Quốc gia</label>
+                                    <input type="text" class="form-control" name="quocGia" id="input-quocGia">
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="mb-3">
+                                    <label for="select-status-product" class="form-label">Trạng thái</label>
+                                    <select class="form-select" name="status" id="select-status-product" required>
+                                        <option disabled selected>Chọn trạng thái</option>
+                                        <option value="hoatdong">Hoạt động</option>
+                                        <option value="dunghoatdong">Dừng hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="btnAddProduct">Thêm</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal sửa sản phẩm -->
+            <div class="modal fade" id="modalEditProduct" tabindex="-1" aria-labelledby="modalEditProductLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <form id="formEditProductAjax">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalEditProductLabel">Sửa sản phẩm</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                            </div>
+
+                            <div class="modal-body">
+                                <!-- Hidden ID -->
+                                <input type="hidden" name="id" id="edit-product-id">
+
+                                <!-- Tên sản phẩm -->
+                                <div class="mb-3">
+                                    <label for="edit-product-title" class="form-label">Tên sản phẩm</label>
+                                    <input type="text" class="form-control" name="title" id="edit-product-title" required>
+                                </div>
+
+                                <!-- Giá -->
+                                <div class="mb-3">
+                                    <label for="edit-product-price" class="form-label">Giá</label>
+                                    <input type="number" class="form-control" name="price" id="edit-product-price" required>
+                                </div>
+
+                                <!-- Danh mục -->
+                                <div class="mb-3">
+                                    <label for="edit-category-product" class="form-label">Danh mục</label>
+                                    <select class="form-select" name="categoryId" id="edit-category-product" required>
+                                        <option disabled selected>Chọn danh mục</option>
+                                        <option th:each="item : ${danhmucspList}"
+                                                th:value="${item.id}"
+                                                th:text="${item.title}">
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <!-- Thông tin sản phẩm -->
+                                <div class="mb-3">
+                                    <label for="edit-product-ttsp" class="form-label">Thông tin chi tiết</label>
+                                    <textarea class="form-control" name="ttSp" id="edit-product-ttsp" rows="3"></textarea>
+                                </div>
+
+                                <!-- Danh sách tài khoản -->
+                                <div class="mb-3">
+                                    <label for="edit-product-list" class="form-label">Danh sách tài khoản (list_sp)</label>
+                                    <textarea class="form-control" name="listSp" id="edit-product-list" rows="3" placeholder="user|pass|2fa\n..."></textarea>
+                                </div>
+
+                                <!-- Người bán -->
+                                <div class="mb-3">
+                                    <label for="edit-ngBan" class="form-label">Người bán</label>
+                                    <input type="text" class="form-control" name="ngBan" id="edit-ngBan">
+                                </div>
+
+                                <!-- Quốc gia -->
+                                <div class="mb-3">
+                                    <label for="edit-quocGia" class="form-label">Quốc gia</label>
+                                    <input type="text" class="form-control" name="quocGia" id="edit-quocGia">
+                                </div>
+
+                                <!-- Trạng thái -->
+                                <div class="mb-3">
+                                    <label for="edit-status-product" class="form-label">Trạng thái</label>
+                                    <select class="form-select" name="status" id="edit-status-product" required>
+                                        <option disabled selected>Chọn trạng thái</option>
+                                        <option value="hoatdong">Hoạt động</option>
+                                        <option value="dunghoatdong">Dừng hoạt động</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="btnEditProduct">Cập nhật</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- jQuery + SweetAlert2 -->
+            <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+            <script>
+                $(document).ready(function () {
+                    $("#search").on("input", function () {
+                        const keyword = $(this).val().toLowerCase().trim();
+
+                        $("#category-table tbody tr").each(function () {
+                            const rowText = $(this).text().toLowerCase();
+                            if (rowText.includes(keyword)) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#title-filter").on("change", function () {
+                        const selected = $(this).val().toLowerCase().trim();
+
+                        $("#category-table tbody tr").each(function () {
+                            const category = $(this).find("td:eq(1)").text().toLowerCase().trim(); // cột thứ 2 là danh mục
+                            if (selected === "" || category === selected) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    const $tbody = $("#category-table tbody");
+                    const $rowsOriginal = $tbody.children("tr").clone(); // 📌 lưu thứ tự gốc
+
+                    $("#price-filter").on("change", function () {
+                        const sortType = $(this).val();
+
+                        if (sortType === "") {
+                            // ✅ Trở về trạng thái ban đầu
+                            $tbody.html($rowsOriginal.clone());
+                            return;
+                        }
+
+                        // 🔽 Sắp xếp theo giá
+                        const $rows = $tbody.children("tr").get();
+
+                        $rows.sort(function (a, b) {
+                            const priceA = parseFloat($(a).find("td:eq(3)").text().replace(/[^0-9.]/g, "")) || 0;
+                            const priceB = parseFloat($(b).find("td:eq(3)").text().replace(/[^0-9.]/g, "")) || 0;
+
+                            return sortType === "asc" ? priceA - priceB : priceB - priceA;
+                        });
+
+                        $.each($rows, function (_, row) {
+                            $tbody.append(row);
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    $("#status-filter").on("change", function () {
+                        const selectedStatus = $(this).val();
+
+                        $("#category-table tbody tr").each(function () {
+                            const statusText = $(this).find("td:eq(7)").text().toLowerCase().trim(); // trạng thái ở cột thứ 8
+
+                            if (!selectedStatus) {
+                                // Hiển thị tất cả nếu chọn "Tất cả"
+                                $(this).show();
+                            } else if (
+                                (selectedStatus === "hoatdong" && statusText === "hoạt động") ||
+                                (selectedStatus === "dunghoatdong" && statusText === "dừng hoạt động")
+                            ) {
+                                $(this).show();
+                            } else {
+                                $(this).hide();
+                            }
+                        });
+                    });
+                });
+
+                $(document).ready(function () {
+                    // 📌 Lưu bản sao ban đầu của tbody khi trang load
+                    const $tbody = $("#category-table tbody");
+                    const $rowsOriginal = $tbody.children("tr").clone();
+
+                    // 🔁 Sự kiện nút reload
+                    $("#btnReloadCategory").on("click", function () {
+                        // Reset toàn bộ bộ lọc
+                        $("#search").val("");
+                        $("#title-filter").val("");
+                        $("#status-filter").val("");
+                        $("#price-filter").val("");
+
+                        // Gắn lại thứ tự gốc
+                        $tbody.html($rowsOriginal.clone());
+                    });
+
+                });
+
+                document.addEventListener("DOMContentLoaded", function () {
+                    const editButtons = document.querySelectorAll(".edit-product");
+
+                    editButtons.forEach(function (button) {
+                        button.addEventListener("click", function () {
+                            const row = button.closest("tr");
+
+                            // 🆕 Gán id sản phẩm vào input ẩn
+                            const productId = row.getAttribute("data-id");
+                            document.getElementById("edit-product-id").value = productId;
+
+                            const danhMuc = row.children[1]?.innerText.trim() || "";
+                            const tenSp = row.children[2]?.innerText.trim() || "";
+                            const gia = row.children[3]?.innerText.trim() || "";
+                            const ttSp = row.querySelector(".ttSp")?.innerText.trim() || "";
+                            const listSp = row.querySelector(".listSp")?.innerText.trim() || "";
+                            const ngBan = row.querySelector(".ngBan")?.innerText.trim() || "";
+                            const quocGia = row.children[6]?.innerText.trim() || "";
+                            const trangThaiText = row.children[7]?.innerText.trim() || "";
+
+                            // Gán vào form
+                            document.getElementById("edit-product-title").value = tenSp;
+                            document.getElementById("edit-product-price").value = gia;
+                            document.getElementById("edit-product-ttsp").value = ttSp;
+                            document.getElementById("edit-product-list").value = listSp;
+                            document.getElementById("edit-ngBan").value = ngBan;
+                            document.getElementById("edit-quocGia").value = quocGia;
+
+                            // Gán danh mục theo text
+                            const selectCategory = document.getElementById("edit-category-product");
+                            for (let i = 0; i < selectCategory.options.length; i++) {
+                                if (selectCategory.options[i].text.trim() === danhMuc) {
+                                    selectCategory.selectedIndex = i;
+                                    break;
+                                }
+                            }
+
+                            // Gán trạng thái
+                            const statusSelect = document.getElementById("edit-status-product");
+                            if (trangThaiText.includes("Hoạt động")) {
+                                statusSelect.value = "hoatdong";
+                            } else if (trangThaiText.includes("Dừng hoạt động")) {
+                                statusSelect.value = "dunghoatdong";
+                            } else {
+                                statusSelect.selectedIndex = 0;
+                            }
+
+                            // Hiển thị modal
+                            const modalEdit = new bootstrap.Modal(document.getElementById('modalEditProduct'));
+                            modalEdit.show();
+                        });
+                    });
+                });
+
+                $("#btnEditProduct").on("click", function (event) {
+                    event.preventDefault();
+                    $('#btnEditProduct').html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
+
+                    // Lấy dữ liệu từ form
+                    const id = $("#edit-product-id").val();
+                    const title = $("#edit-product-title").val().trim();
+                    const price = $("#edit-product-price").val().trim();
+                    const categoryId = $("#edit-category-product").val();
+                    const ttSp = $("#edit-product-ttsp").val().trim();
+                    const listSp = $("#edit-product-list").val().trim();
+                    const ngBan = $("#edit-ngBan").val().trim();
+                    const quocGia = $("#edit-quocGia").val().trim();
+                    const status = $("#edit-status-product").val();
+
+                    // Kiểm tra thiếu thông tin bắt buộc
+                    if (!title || !price || !categoryId || !listSp || !status) {
+                        Swal.fire({
+                            title: "Thiếu thông tin",
+                            icon: "warning",
+                            text: "Vui lòng điền đầy đủ các trường bắt buộc!",
+                            customClass: {
+                                confirmButton: "btn btn-warning"
+                            }
+                        });
+                        $('#btnEditProduct').html('Cập nhật').prop('disabled', false);
+                        return;
+                    }
+
+                    // Tạo object dữ liệu gửi lên (FormData dạng x-www-form-urlencoded, không cần JSON)
+                    const formData = {
+                        title: title,
+                        price: price,
+                        categoryId: categoryId,
+                        ttSp: ttSp,
+                        listSp: listSp,
+                        ngBan: ngBan,
+                        quocGia: quocGia,
+                        status: status
+                    };
+
+                    // Gửi POST tới Controller update
+                    $.post("/admin/product/update/" + id, formData, function (data) {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: "Thành công",
+                                icon: "success",
+                                text: data.msg,
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            Swal.fire({
+                                title: "Lỗi",
+                                icon: "error",
+                                text: data.msg,
+                                customClass: {
+                                    confirmButton: "btn btn-danger"
+                                }
+                            });
+                        }
+                        $('#btnEditProduct').html('Cập nhật').prop('disabled', false);
+                    }, "json")
+                        .fail(function () {
+                            Swal.fire({
+                                title: "Lỗi server",
+                                icon: "error",
+                                text: "Không thể gửi yêu cầu đến máy chủ.",
+                                customClass: {
+                                    confirmButton: "btn btn-danger"
+                                }
+                            });
+                            $('#btnEditProduct').html('Cập nhật').prop('disabled', false);
+                        });
+                });
+
+
+                $(document).on("click", ".delete-product", function () {
+                    const id = $(this).closest("tr").data("id"); // lấy id từ dòng chứa sản phẩm
+
+                    Swal.fire({
+                        title: "Bạn có chắc muốn xoá sản phẩm này?",
+                        text: "Thao tác này không thể hoàn tác!",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Xoá",
+                        cancelButtonText: "Hủy",
+                        customClass: {
+                            confirmButton: "btn btn-danger",
+                            cancelButton: "btn btn-secondary"
+                        },
+                        buttonsStyling: false
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                url: "/admin/product/delete/" + id,
+                                type: "DELETE",
+                                success: function (data) {
+                                    if (data.status === "success") {
+                                        Swal.fire("Đã xoá!", data.msg, "success");
+                                        setTimeout(() => location.reload(), 1500);
+                                    } else {
+                                        Swal.fire("Thất bại", data.msg, "error");
+                                    }
+                                },
+                                error: function () {
+                                    Swal.fire("Lỗi", "Không thể kết nối với máy chủ", "error");
+                                }
+                            });
+                        }
+                    });
+                });
+
+                $("#btnAddProduct").on("click", function (event) {
+                    event.preventDefault();
+                    $('#btnAddProduct').html('<i class="fa fa-spinner fa-spin"></i> Đang xử lý...').prop('disabled', true);
+
+                    // Lấy dữ liệu từ form
+                    const title = $("#input-product-title").val().trim();
+                    const price = $("#input-product-price").val().trim();
+                    const categoryId = $("#select-category-product").val();
+                    const ttSp = $("#textarea-product-ttsp").val().trim();
+                    const listSp = $("#textarea-product-list").val().trim();
+                    const ngBan = $("#input-ngBan").val().trim();
+                    const quocGia = $("#input-quocGia").val().trim();
+                    const status = $("#select-status-product").val();
+
+                    // Kiểm tra thiếu thông tin bắt buộc
+                    if (!title || !price || !categoryId || !listSp || !status) {
+                        Swal.fire({
+                            title: "Thiếu thông tin",
+                            icon: "warning",
+                            text: "Vui lòng điền đầy đủ các trường bắt buộc!",
+                            customClass: {
+                                confirmButton: "btn btn-warning"
+                            }
+                        });
+                        $('#btnAddProduct').html('Thêm').prop('disabled', false);
+                        return;
+                    }
+
+                    // Tạo object dữ liệu gửi lên
+                    const formData = {
+                        title: title,
+                        price: price,
+                        categoryId: categoryId,
+                        ttSp: ttSp,
+                        listSp: listSp,
+                        ngBan: ngBan,
+                        quocGia: quocGia,
+                        status: status
+                    };
+
+                    // Gửi POST tới Controller
+                    $.post("/admin/product/add", formData, function (data) {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: "Thành công",
+                                icon: "success",
+                                text: data.msg,
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+                            setTimeout(function () {
+                                window.location.reload();
+                            }, 1500);
+                        } else {
+                            Swal.fire({
+                                title: "Lỗi",
+                                icon: "error",
+                                text: data.msg,
+                                customClass: {
+                                    confirmButton: "btn btn-danger"
+                                }
+                            });
+                        }
+                        $('#btnAddProduct').html('Thêm').prop('disabled', false);
+                    }, "json")
+                        .fail(function () {
+                            Swal.fire({
+                                title: "Lỗi server",
+                                icon: "error",
+                                text: "Không thể gửi yêu cầu đến máy chủ.",
+                                customClass: {
+                                    confirmButton: "btn btn-danger"
+                                }
+                            });
+                            $('#btnAddProduct').html('Thêm').prop('disabled', false);
+                        });
+                });
+            </script>
+        </div>
+        <div th:replace="~{app/footer :: footer}"></div>
+    </div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>

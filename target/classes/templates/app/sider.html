@@ -1,0 +1,142 @@
+<div th:fragment="sider">
+    <div class="sidebar-wrapper" data-layout="stroke-svg" bis_skin_checked="1">
+        <div class="logo-wrapper" bis_skin_checked="1">
+            <a href="/" bis_size="{&quot;x&quot;:30,&quot;y&quot;:34,&quot;w&quot;:170,&quot;h&quot;:18,&quot;abs_x&quot;:30,&quot;abs_y&quot;:34}">
+                <img class="img-fluid" src="https://i.imgur.com/FJZ4kRE.png" data-src="https://i.imgur.com/FJZ4kRE.png" height="170px" width="170px" alt="logo" bis_size="{&quot;x&quot;:30,&quot;y&quot;:22,&quot;w&quot;:170,&quot;h&quot;:45,&quot;abs_x&quot;:30,&quot;abs_y&quot;:22}" bis_id="bn_ol8q9s92qh1s1k209afhxh">
+            </a>
+            <div class="back-btn" bis_skin_checked="1">
+                <i class="fa fa-angle-left"></i>
+            </div>
+            <div class="toggle-sidebar" bis_skin_checked="1" checked="checked">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid status_toggle middle sidebar-toggle">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+            </div>
+        </div>
+        <div class="logo-icon-wrapper" bis_skin_checked="1">
+            <a href="/home">
+                <img class="img-fluid lazyload" src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" data-src="https://i.imgur.com/FJZ4kRE.png" height="170px" width="170px" alt="logo">
+            </a>
+        </div>
+        <nav class="sidebar-main">
+            <div id="sidebar-menu" bis_skin_checked="1">
+                <ul class="sidebar-links" id="simple-bar" data-simplebar="init" style="display: block;">
+                    <div class="simplebar-wrapper" style="margin: 0px;" bis_skin_checked="1">
+                        <div class="simplebar-height-auto-observer-wrapper" bis_skin_checked="1">
+                            <div class="simplebar-height-auto-observer" bis_skin_checked="1"></div>
+                        </div>
+                        <div class="simplebar-mask" bis_skin_checked="1">
+                            <div class="simplebar-offset" style="right: 0px; bottom: 0px;" bis_skin_checked="1">
+                                <div class="simplebar-content-wrapper" style="height: 100%; overflow: hidden;" bis_skin_checked="1">
+                                    <div class="simplebar-content" style="padding: 0px;" bis_skin_checked="1">
+                                        <!-- Back Button -->
+                                        <li class="back-btn">
+                                            <a href="/">
+                                                <img class="img-fluid lazyload" src="https://hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif" data-src="https://i.imgur.com/FJZ4kRE.png" height="170px" width="170px" alt="logo">
+                                            </a>
+                                        </li>
+                                        <!-- Dashboards Section -->
+                                        <li class="sidebar-main-title">
+                                            <h6>Trang chủ</h6>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav active" href="javascript:void(0)">
+                                                <i class="fa-solid fa-house" style="color: #0d640c;"></i>
+                                                <span>Dashboards</span>
+                                                <div class="according-menu" bis_skin_checked="1"><i class="fa fa-angle-down"></i></div>
+                                            </a>
+                                            <ul class="sidebar-submenu" style="display: block;">
+                                                <li><a href="/home" class="active">Trang chủ</a></li>
+                                                <li><a href="#">Đăng xuất</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="sidebar-main-title">
+                                            <h6>Sản phẩm</h6>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="javascript:void(0)">
+                                                <i class="fa-solid fa-list" style="color: #74C0FC;"></i>
+                                                <span>Danh Mục Sản Phẩm</span>
+                                                <div class="according-menu" bis_skin_checked="1"><i class="fa fa-angle-right"></i></div>
+                                            </a>
+                                            <ul class="sidebar-submenu" style="display: none;">
+                                                <li th:each="danhmucsp : ${danhmucspList}">
+                                                    <a th:href="@{'/view_product/' + ${danhmucsp.id}}" th:text="${danhmucsp.title}"></a>
+                                                </li>
+                                            </ul>
+                                        </li>
+
+                                        <li class="sidebar-main-title">
+                                            <h6>Nạp tiền</h6>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="/nap-bank/list">
+                                                <i class="fa-solid fa-building-columns" style="color: #63E6BE;"></i>
+                                                <span>Nạp ATM</span>
+                                                <div class="according-menu" bis_skin_checked="1"><i class="fa fa-angle-right"></i></div>
+                                            </a>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="/lich-su-nap/lich-su-nap-tien">
+                                                <i class="fa-solid fa-money-check-dollar" style="color: #FFD43B;"></i>
+                                                <span>Lịch sử nạp tiền</span>
+                                                <div class="according-menu" bis_skin_checked="1"><i class="fa fa-angle-right"></i></div>
+                                            </a>
+                                        </li>
+                                        <!-- Quản lý đơn hàng Section -->
+                                        <li class="sidebar-main-title">
+                                            <h6>Quản lý đơn hàng</h6>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="/donhang/lich-su-mua-hang">
+                                                <i class="fa-solid fa-folder" style="color: #e91620;"></i>
+                                                <span>Lịch sử mua hàng</span>
+                                                <div class="according-menu" bis_skin_checked="1"><i class="fa fa-angle-right"></i></div>
+                                            </a>
+                                        </li>
+                                        <!-- Hỗ trợ Section -->
+                                        <li class="sidebar-main-title">
+                                            <h6>Hỗ trợ</h6>
+                                        </li>
+                                        <li class="sidebar-list">
+                                            <a class="sidebar-link sidebar-title link-nav" href="javascript:void(0)">
+                                                <i class="fa-solid fa-phone" style="color: #e2c018;"></i>
+                                                <span>Liên hệ</span>
+                                                <div class="according-menu" bis_skin_checked="1"><i class="fa fa-angle-right"></i></div>
+                                            </a>
+                                            <ul class="sidebar-submenu" style="display: none;">
+                                                <li><a href="https://www.facebook.com/chinhapiit">Facebook</a></li>
+                                                <li><a href="388674883">Zalo</a></li>
+                                                <li><a href="@chinhapiit">Telegram</a></li>
+                                            </ul>
+                                        </li>
+
+                                            <li class="sidebar-list" th:if="${level == 1}">
+                                                <a class="sidebar-link sidebar-title link-nav" href="/admin/dashboards">
+                                                    <i class="fa-solid fa-user-tie fa-xl" style="color:rgb(41, 170, 190);"></i>
+                                                    <span>Trang Quản Trị</span>
+                                                    <div class="according-menu"><i class="fa fa-angle-right"></i></div>
+                                                </a>
+                                            </li>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="simplebar-placeholder" style="width: auto; height: 823px;" bis_skin_checked="1"></div>
+                    </div>
+                    <div class="simplebar-track simplebar-horizontal" style="visibility: hidden;" bis_skin_checked="1">
+                        <div class="simplebar-scrollbar" style="width: 0px; display: none;" bis_skin_checked="1"></div>
+                    </div>
+                    <div class="simplebar-track simplebar-vertical" style="visibility: hidden;" bis_skin_checked="1">
+                        <div class="simplebar-scrollbar" style="height: 0px; display: none;" bis_skin_checked="1"></div>
+                    </div>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</div>

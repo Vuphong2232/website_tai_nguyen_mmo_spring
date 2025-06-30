@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4"></div>
+    </div>
+</div>
+<div class="tap-top"><i data-feather="chevrons-up"></i></div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}"></div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{app/sider :: sider}"></div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Trang Chủ</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">Số Dư</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Container-fluid starts-->
+            <div class="container-fluid">
+                <div class="edit-profile">
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">Thông tin tài khoản</h4>
+                                    <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="row mb-2">
+                                            <div class="profile-title">
+                                                <div class="media"> <img class="img-70 rounded-circle" alt="" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwLeIGjrPAK2i_tTs9x9TqL9LrUXSi9zmS3g&s">
+                                                    <div class="media-body">
+                                                        <h5 th:text="${username}">Nguyễn Chính</h5>
+                                                        <p>Thành Viên</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-2">
+                                            <label class="form-label">Số Dư (VNĐ):</label>
+                                            <div class="input-group">
+                                                <input class="form-control" readonly th:value="${money + 'đ'}">
+                                                <a href="/nap-atm" class="btn btn-sm btn-danger">Nạp Tiền</a>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2" bis_skin_checked="1">
+                                            <label class="form-label">Tổng Nạp (VNĐ):</label>
+                                            <div class="input-group" bis_skin_checked="1">
+                                                <input class="form-control"  readonly th:value="${user.tongNap + 'đ'}">
+                                                <a href="/nap-atm" class="btn btn-sm btn-danger">Nạp Tiền</a>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-8">
+                            <form class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title mb-0">Cập nhật thông tin</h4>
+                                    <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
+                                </div>
+                                <div class="card-body" bis_skin_checked="1">
+                                    <div class="row" bis_skin_checked="1">
+                                        <div class="col-md-6" bis_skin_checked="1">
+                                            <div class="mb-3" bis_skin_checked="1">
+                                                <label class="form-label">Username</label>
+                                                <input class="form-control" type="text"  th:value="${username}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" bis_skin_checked="1">
+                                            <div class="mb-3" bis_skin_checked="1">
+                                                <label class="form-label">Token</label>
+                                                <input class="form-control" type="text" th:value="${user.token}" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" bis_skin_checked="1">
+                                            <div class="mb-3" bis_skin_checked="1">
+                                                <label class="form-label">Nhập maajt khẩu cũ </label>
+                                                <input class="form-control" type="text" id="oldpass" placeholder="Nhập mật khẩu mới" >
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6" bis_skin_checked="1">
+                                            <div class="mb-3" bis_skin_checked="1">
+                                                <label class="form-label">Mật Khẩu Mới</label>
+                                                <input class="form-control" type="text" id="newpass" placeholder="Nhập mật khẩu mới" >
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6" bis_skin_checked="1">
+                                            <div class="mb-3" bis_skin_checked="1">
+                                                <label class="form-label">Trạng Thái API</label>
+                                                <input class="form-control" type="text" placeholder="Tắt" value="Tắt" disabled="">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="card-footer text-end">
+                                    <button class="btn btn-primary" id="btnUpdate">Cập Nhật</button>
+                                </div>
+                                <script>
+                                    $("#btnUpdate").on("click", function() {
+                                        $('#btnUpdate').html(
+                                            '<i class="fa fa-spinner fa-spin"></i> Đang xử lý...'
+                                        ).prop('disabled',
+                                            true);
+
+                                        var myOTPData = {
+                                            newpass: $("#newpass").val(),
+                                            oldpass: $("#oldpass").val()
+                                        };
+                                        $.post("http://localhost:8080/users/doi_mat_khau", myOTPData,
+                                            function(data) {
+                                                if (data.status == 'success') {
+                                                    Swal.fire({
+                                                        title: "Thành công",
+                                                        icon: "success",
+                                                        text: data.msg,
+                                                        customClass: {
+                                                            confirmButton: "btn btn-primary"
+                                                        }
+                                                    });
+                                                    setTimeout(function() {
+                                                        window.location = "/home"
+                                                    }, 2000);
+                                                } else {
+                                                    Swal.fire({
+                                                        title: "Lỗi",
+                                                        icon: "error",
+                                                        text: data.msg,
+                                                        customClass: {
+                                                            confirmButton: "btn btn-primary"
+                                                        }
+                                                    });
+                                                }
+                                                $('#btnUpdate').html('Cập Nhật').prop(
+                                                    'disabled', false);
+                                            }, "json");
+                                    });
+                                </script>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+        <div th:replace="~{app/footer :: footer}"></div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert Library -->
+    </div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>

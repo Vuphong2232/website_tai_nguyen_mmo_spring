@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4"></div>
+    </div>
+</div>
+<div class="tap-top"><i data-feather="chevrons-up"></i></div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}"></div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{admin/app/leftsider :: sider}"></div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Trang Chủ</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">Số Dư</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid" bis_skin_checked="1">
+                <div class="row" bis_skin_checked="1">
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card o-hidden small-widget">
+                            <div class="card-body total-Progress border-b-warning border-2">
+                                <span class="f-light f-w-500 f-14">Tổng Doanh Thu</span>
+                                <div class="project-details">
+                                    <div class="project-counter">
+                                        <h2 class="f-w-600" th:text="${tongDoanhThu}">0</h2>
+                                        <span class="f-12 f-w-400">đ</span>
+                                    </div>
+                                    <div class="product-sub bg-warning-light">
+                                        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+                                        <lord-icon src="https://cdn.lordicon.com/jzvoyjzb.json" trigger="hover" colors="primary:#121331,secondary:#ebe6ef,tertiary:#911710" style="width:40px;height:40px">
+                                        </lord-icon>
+                                    </div>
+                                </div>
+                                <ul class="bubbles">
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card o-hidden small-widget">
+                            <div class="card-body total-Complete border-b-secondary border-2">
+                                <span class="f-light f-w-500 f-14">Đơn Hàng Đã Bán</span>
+                                <div class="project-details">
+                                    <div class="project-counter">
+                                        <h2 class="f-w-600" th:text="${soDonHang}">0</h2>
+                                        <span class="f-12 f-w-400">đ</span>
+                                    </div>
+                                    <div class="product-sub bg-secondary-light">
+                                        <lord-icon src="https://cdn.lordicon.com/nvhwrysk.json" trigger="hover" style="width:40px;height:40px">
+                                        </lord-icon>
+                                    </div>
+                                </div>
+                                <ul class="bubbles">
+                                    <li class="bubble"> </li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"> </li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"> </li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"> </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card o-hidden small-widget">
+                            <div class="card-body total-upcoming">
+                                <span class="f-light f-w-500 f-14">Lợi Nhuận Đơn Hàng</span>
+                                <div class="project-details">
+                                    <div class="project-counter">
+                                        <h2 class="f-w-600" th:text="${loiNhuan}">0</h2>
+                                        <span class="f-12 f-w-400">đ</span>
+                                    </div>
+                                    <div class="product-sub bg-light-light">
+                                        <lord-icon src="https://cdn.lordicon.com/dypzookn.json" trigger="hover" style="width:40px;height:40px">
+                                        </lord-icon>
+                                    </div>
+                                </div>
+                                <ul class="bubbles">
+                                    <li class="bubble"> </li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-sm-6">
+                        <div class="card o-hidden small-widget">
+                            <div class="card-body total-project border-b-primary border-2">
+                                <span class="f-light f-w-500 f-14">Thành Viên Đăng Ký</span>
+                                <div class="project-details">
+                                    <div class="project-counter">
+                                        <h2 class="f-w-600" th:text="${soThanhVien}">0</h2>
+                                        <span class="f-12 f-w-400">Thành Viên</span>
+                                    </div>
+                                    <div class="product-sub bg-primary-light">
+                                        <lord-icon src="https://cdn.lordicon.com/jtiihjyw.json" trigger="loop" delay="1000" style="width:40px;height:40px">
+                                        </lord-icon>
+                                    </div>
+                                </div>
+                                <ul class="bubbles">
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                    <li class="bubble"></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thêm thư viện ApexCharts -->
+                    <!-- Thư viện ApexCharts -->
+                    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+                    <div class="row">
+                        <!-- Biểu đồ doanh thu và lợi nhuận theo tháng -->
+                        <div class="col-xl-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Doanh thu và Lợi nhuận theo Tháng</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="monthlyChart"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Biểu đồ doanh thu theo năm -->
+                        <div class="col-xl-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Doanh thu theo Năm</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div id="yearlyChart"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script th:inline="javascript">
+                        let labelsNgay = /*[[${labelsNgay}]]*/ [];
+                        let dataNgay = /*[[${dataNgay}]]*/ [];
+                        let labelsThang = /*[[${labelsThang}]]*/ [];
+                        let dataThang = /*[[${dataThang}]]*/ [];
+                        let dataLoiNhuan = /*[[${dataLoiNhuan}]]*/ [];
+
+
+                        // Biểu đồ theo NGÀY trong tháng
+                        var optionsMonth = {
+                            chart: { type: 'bar', height: 300 },
+                            series: [
+                                { name: 'Doanh thu', data: dataNgay },
+                                { name: 'Lợi nhuận (20%)', data: dataLoiNhuan }
+                            ],
+                            xaxis: {
+                                categories: labelsNgay,
+                                title: { text: "Ngày" }
+                            },
+                            colors: ['#FFA500', '#2E8B57'],
+                            plotOptions: {
+                                bar: { horizontal: false, columnWidth: '50%' }
+                            },
+                            dataLabels: { enabled: false },
+                            tooltip: { shared: true, intersect: false }
+                        };
+
+                        var chartMonth = new ApexCharts(document.querySelector("#monthlyChart"), optionsMonth);
+                        chartMonth.render();
+
+                        // Biểu đồ theo THÁNG trong năm
+                        var optionsYear = {
+                            chart: { type: 'line', height: 300 },
+                            series: [{ name: 'Doanh thu theo tháng', data: dataThang }],
+                            xaxis: { categories: labelsThang, title: { text: "Tháng" } },
+                            colors: ['#FF7F50'],
+                            stroke: { curve: 'smooth' },
+                            dataLabels: { enabled: true },
+                            tooltip: { shared: true, intersect: false }
+                        };
+                        var chartYear = new ApexCharts(document.querySelector("#yearlyChart"), optionsYear);
+                        chartYear.render();
+                    </script>
+
+
+
+                </div>
+            </div>
+        </div>
+        </div>
+
+
+
+
+
+
+        <div th:replace="~{app/footer :: footer}"></div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert Library -->
+    </div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>

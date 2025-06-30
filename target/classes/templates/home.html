@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en" >
+<div th:replace="~{app/header :: header}"></div>
+<body>
+<div class="loader-wrapper">
+    <div class="loader">
+        <div class="loader4"></div>
+    </div>
+</div>
+<div class="tap-top"><i data-feather="chevrons-up"></i></div>
+<div class="page-wrapper compact-wrapper" id="pageWrapper">
+    <div class="page-header" bis_skin_checked="1">
+        <div th:replace="~{app/nav :: nav}"></div>
+    </div>
+    <div class="page-body-wrapper">
+        <div th:replace="~{app/sider :: sider}"></div>
+        <div class="page-body">
+            <div class="container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4>Trang Chủ</h4>
+                        </div>
+                        <div class="col-6">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item active text-end" th:text="'Số dư: ' + ${money} + 'đ'">Số Dư</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <ul bis_size="{&quot;x&quot;:20,&quot;y&quot;:20,&quot;w&quot;:1552,&quot;h&quot;:41,&quot;abs_x&quot;:919,&quot;abs_y&quot;:393}">
+                                    <li bis_size="{&quot;x&quot;:60,&quot;y&quot;:20,&quot;w&quot;:1472,&quot;h&quot;:20,&quot;abs_x&quot;:959,&quot;abs_y&quot;:393}"><u bis_size="{&quot;x&quot;:60,&quot;y&quot;:22,&quot;w&quot;:394,&quot;h&quot;:15,&quot;abs_x&quot;:959,&quot;abs_y&quot;:395}"><strong bis_size="{&quot;x&quot;:60,&quot;y&quot;:22,&quot;w&quot;:386,&quot;h&quot;:15,&quot;abs_x&quot;:959,&quot;abs_y&quot;:395}">CỔNG SUPPORT CH&Iacute;NH THỨC - CỔNG HỖ TRỢ CH&Iacute;NH THỨC&nbsp;</strong><strong bis_size="{&quot;x&quot;:446,&quot;y&quot;:22,&quot;w&quot;:7,&quot;h&quot;:15,&quot;abs_x&quot;:1345,&quot;abs_y&quot;:395}">:&nbsp;</strong></u><strong bis_size="{&quot;x&quot;:454,&quot;y&quot;:22,&quot;w&quot;:106,&quot;h&quot;:15,&quot;abs_x&quot;:1353,&quot;abs_y&quot;:395}">&nbsp;<a bis_size="{&quot;x&quot;:458,&quot;y&quot;:22,&quot;w&quot;:103,&quot;h&quot;:15,&quot;abs_x&quot;:1357,&quot;abs_y&quot;:395}" href="https://t.me/chinhapiit">t.me/chinhappiit&nbsp;</a></strong></li>
+                                    <li bis_size="{&quot;x&quot;:60,&quot;y&quot;:40,&quot;w&quot;:1472,&quot;h&quot;:20,&quot;abs_x&quot;:959,&quot;abs_y&quot;:413}"><strong bis_size="{&quot;x&quot;:60,&quot;y&quot;:42,&quot;w&quot;:270,&quot;h&quot;:15,&quot;abs_x&quot;:959,&quot;abs_y&quot;:415}">BOX GIAO LƯU :&nbsp;&nbsp;</strong><a href="https://t.me/mmo_solution"><strong>https://t.me/mmo_solution</strong></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-auto col-md-6 col-sm-auto category-btn" data-id="0">
+                        <div class="card o-hidden small-widget category-card">
+                            <div class="card-body total-project border-b-primary border-2 text-center">
+                                <i class="fa-solid fa-cart-shopping"></i>
+                                <span class="f-light f-w-500 f-14">Tất cả sản phẩm</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-auto col-md-6 col-sm-auto category-btn" th:each="danhmucsp : ${danhmucspList}" th:attr="data-id=${danhmucsp.id}">
+                        <div class="card o-hidden small-widget category-card">
+                            <div class="card-body total-Progress border-b-warning border-2 text-center">
+                                <img th:src="@{${danhmucsp.img}}" alt="" height="20px">
+                                <span class="f-light f-w-500 f-14" th:text="${danhmucsp.title}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-3 col-sm-12" th:each="sp : ${sanphamList}" th:data-danhmuc-id="${sp.id_dm}">
+                <div class="card">
+                        <div class="card-body">
+                            <div class="product-page-details two-line-ellipsis">
+                                <h3 th:text="${sp.title}">Tên sản phẩm</h3>
+                            </div>
+                            <div class="product-price">
+                                <span th:text="${sp.price} + 'đ'"></span>
+                                <del th:text="${sp.price} + 'đ'"></del>
+                            </div>
+                            <ul class="product-color">
+                                <li class="bg-primary"></li>
+                                <li class="bg-secondary"></li>
+                                <li class="bg-success"></li>
+                                <li class="bg-info"></li>
+                                <li class="bg-warning"></li>
+                            </ul>
+                            <hr>
+                            <ul>
+                                <li class="one-line-ellipsis" th:each="dong : ${listGtMap[sp.id]}">
+                                    <i class="fa-solid fa-circle-check"></i><span  th:text="${dong}">Thông tin</span>
+                                </li>
+                            </ul>
+
+
+                            <hr>
+                            <div>
+                                <table class="product-page-width">
+                                    <tbody>
+                                    <tr>
+                                        <td><b>Quốc gia :</b></td>
+                                        <td th:text="${sp.quocGia}">Hoa Kỳ</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Hiện có :</b></td>
+                                        <td th:text="${ttSpMap[sp.id].size()}">0 </td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Người bán :</b></td>
+                                        <td><a href="#" th:text="${sp.ngBan}">(Xem Gian Hàng)</a></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <button class="btn btn-square btn-primary-gradien w-100 text-center"
+                                            data-bs-toggle="modal"
+                                            th:attr="data-bs-target='#tooltipmodal-' + ${sp.id}"
+                                            style="border-radius: 10px;" type="button">
+                                        <i class="fa fa-shopping-cart me-1"></i> Mua ngay
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" th:id="'tooltipmodal-' + ${sp.id}" th:attr="aria-labelledby='tooltipmodal-' + ${sp.id}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Thanh toán đơn hàng</h5>
+                                            <button class="btn-close py-0" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h5>Tên sản phẩm :</h5>
+                                            <div class="mt-2">
+                                                <input type="text" class="form-control" th:value="${sp.title}" readonly>
+                                            </div>
+                                            <br>
+                                            <h5>Nhập số lượng cần mua :</h5>
+                                            <div class="mt-2">
+                                                <input type="number" class="form-control quantity-input"
+                                                       th:attr="data-price=${sp.price}"
+                                                       placeholder="Nhập số lượng" min="1" step="1">
+                                            </div>
+                                            <br>
+                                            <h5>Mã giảm giá :</h5>
+                                            <div class="mt-2">
+                                                <input type="text" class="form-control" placeholder="Nhập mã giảm giá (nếu có)">
+                                            </div>
+                                            <hr>
+                                            <h5>Tổng tiền cần thanh toán:</h5>
+                                            <p class="mt-2">
+                                                <span>Số tiền giảm :</span> 0đ<br>
+                                                <span class="tooltip-test text-info" data-bs-toggle="tooltip" data-bs-original-title="Tooltip">
+                                    Tổng tiền :
+                                </span>
+                                                <span th:id="'total-price-' + ${sp.id}">0đ</span>
+                                            </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Đóng</button>
+                                            <button class="btn btn-primary btn-thanhtoan"
+                                                    th:id="'btnThanhtoan-' + ${sp.id}"
+                                                    th:attr="data-id=${sp.id}" type="button">
+                                                Thanh toán
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $(".category-btn").on("click", function () {
+                    const selectedId = $(this).data("id");
+                    $(".category-btn").removeClass("active");
+                    $(this).addClass("active");
+                    if (selectedId === 0) {
+                        $("[data-danhmuc-id]").show();
+                    } else {
+                        $("[data-danhmuc-id]").hide();
+                        $("[data-danhmuc-id='" + selectedId + "']").show();
+                    }
+                });
+            });
+        </script>
+
+
+        <script th:inline="javascript">
+            const username = /*[[${username}]]*/ '';
+
+            $(document).on("click", ".btn-thanhtoan", function () {
+                const button = $(this);
+                const modal = button.closest('.modal');
+                const id_sp = button.data('id');
+                const quantity = parseInt(modal.find('.quantity-input').val()) || 0;
+                const price = parseFloat(modal.find('.quantity-input').data('price'));
+                const totalPrice = price * quantity;
+
+                if (quantity <= 0) {
+                    Swal.fire({
+                        title: "Lỗi",
+                        text: "Vui lòng nhập số lượng hợp lệ!",
+                        icon: "error",
+                        confirmButtonText: "Thử lại",
+                        customClass: { confirmButton: "btn btn-primary" }
+                    });
+                    return;
+                }
+
+                const payload = {
+                    sanpham: { id: id_sp },
+                    username: username
+                };
+
+                button.html('Đang xử lý...').prop('disabled', true);
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8080/donhang/buy_sp",
+                    contentType: "application/json",
+                    data: JSON.stringify(payload),
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: "Thành công",
+                                icon: "success",
+                                text: data.msg,
+                                confirmButtonText: "OK",
+                                customClass: { confirmButton: "btn btn-primary" }
+                            }).then(() => {
+                                window.location = "/lich-su-mua-hang";
+                            });
+                        } else {
+                            Swal.fire({
+                                title: "Thất bại",
+                                icon: "error",
+                                text: data.msg,
+                                confirmButtonText: "Thử lại",
+                                customClass: { confirmButton: "btn btn-primary" }
+                            });
+                            button.html('Thanh toán').prop('disabled', false);
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({
+                            title: "Lỗi",
+                            text: "Đã xảy ra lỗi khi gửi yêu cầu!",
+                            icon: "error",
+                            confirmButtonText: "Đồng ý"
+                        });
+                        button.html('Thanh toán').prop('disabled', false);
+                    }
+                });
+            });
+        </script>
+
+        <script>
+            $(document).on('input', '.quantity-input', function () {
+                const price = parseFloat($(this).data('price'));
+                const quantity = parseInt($(this).val()) || 0;
+                const totalPrice = price * quantity;
+                const modalId = $(this).closest('.modal').attr('id');
+                $('#' + modalId + ' #total-price-' + modalId.split('-')[1]).text(totalPrice.toLocaleString('vi-VN') + 'đ');
+            });
+        </script>
+        <div th:replace="~{app/footer :: footer}"></div>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <!-- SweetAlert Library -->
+    </div>
+</div>
+<div th:replace="~{app/script :: script}"></div>
+</body>
+</html>
